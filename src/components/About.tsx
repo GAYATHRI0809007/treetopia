@@ -88,10 +88,10 @@ export const About: React.FC<AboutProps> = ({ onLearnMore }) => {
                 Discover <strong className="font-medium text-forest">TREETOPIA</strong>, a private countryside retreat in Unisenatham, Tamil Nadu, located just 30 minutes away from Electronic City, Bangalore.
               </p>
               <p>
-                Designed for those who crave quiet luxury without disconnecting from comfort, Treetopia features two distinctive cantilevered bedroom pods elevated among trees, an open outdoor entertainment lounge, a private plunge pool, and floodlit cricket nets.
+                Designed for those who crave quiet luxury without disconnecting from comfort, Treetopia offers three distinct accommodation experiences: two modern cantilevered bedroom pods elevated among trees, the spacious ground-level Bunker suite, and an authentic lawn glamping tent.
               </p>
               <p className="text-sm text-charcoal/70">
-                Whether you are gathering family for an intimate birthday, reconnecting with close friends, or enjoying an outdoor cinema night under starry skies, the entire 9,000 sq.ft property is exclusively yours for the duration of your stay.
+                Whether you are booking the Two Pods (up to 9 guests), the Bunker (up to 12 guests), or reserving the entire 9,000 sq.ft estate for up to 21 guests, enjoy a refreshing plunge pool, floodlit cricket nets, open-air dining pavilion, and outdoor movie cinema under starry skies.
               </p>
             </div>
 

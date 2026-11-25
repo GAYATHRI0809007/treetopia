@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { siteConfig } from '../data/siteConfig';
 import {
   X,
@@ -14,12 +14,12 @@ import {
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialPackageCode?: string;
 }
 
 interface FormState {
   fullName: string;
   phone: string;
-  email: string;
   checkIn: string;
   checkOut: string;
   adults: number;
@@ -28,18 +28,53 @@ interface FormState {
   specialRequests: string;
 }
 
-export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) => {
+const PACKAGE_OPTIONS = [
+  {
+    code: 'P1',
+    label: 'Package 1: Two Pods + Amenities (Up to 9 Guests)',
+    airbnbUrl: siteConfig.packages.p1.airbnbUrl,
+  },
+  {
+    code: 'P2',
+    label: 'Package 2: Bunker + Amenities (Up to 12 Guests)',
+    airbnbUrl: siteConfig.packages.p2.airbnbUrl,
+  },
+  {
+    code: 'P3',
+    label: 'Package 3: Two Pods + Bunker + Amenities (Up to 21 Guests · Full Estate)',
+    airbnbUrl: siteConfig.packages.p3.airbnbUrl,
+  },
+];
+
+export const BookingModal: React.FC<BookingModalProps> = ({
+  isOpen,
+  onClose,
+  initialPackageCode = 'P3',
+}) => {
+  const getDefaultOption = (code?: string) => {
+    const found = PACKAGE_OPTIONS.find((p) => p.code === code);
+    return found ? found.label : PACKAGE_OPTIONS[2].label;
+  };
+
   const [formData, setFormData] = useState<FormState>({
     fullName: '',
     phone: '',
-    email: '',
     checkIn: '',
     checkOut: '',
     adults: 2,
     children: 0,
-    accommodation: 'Entire Private Estate (2 Pods + Glamping Tent)',
+    accommodation: getDefaultOption(initialPackageCode),
     specialRequests: '',
   });
+
+  useEffect(() => {
+    if (initialPackageCode) {
+      setFormData((prev) => ({
+        ...prev,
+        accommodation: getDefaultOption(initialPackageCode),
+      }));
+    }
+  }, [initialPackageCode]);
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -56,16 +91,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
       newErrors.fullName = 'Please enter your full name';
     }
 
-    // Phone validation: basic digits check (at least 10 digits)
+    // Phone validation: at least 10 digits
     const cleanPhone = formData.phone.replace(/[^0-9]/g, '');
     if (!cleanPhone || cleanPhone.length < 10) {
       newErrors.phone = 'Please enter a valid 10-digit mobile number';
-    }
-
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim() || !emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
     }
 
     // Check-in date validation
@@ -92,19 +121,18 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Build pre-formatted WhatsApp message
+    // Build pre-formatted WhatsApp message (strictly NO email)
     const message = `*TREETOPIA FARMSTAY ENQUIRY* 🌿🛖
 ---------------------------------
 👤 *Guest Name:* ${formData.fullName.trim()}
 📱 *Phone:* ${formData.phone.trim()}
-📧 *Email:* ${formData.email.trim()}
 📅 *Check-in Date:* ${formData.checkIn}
 📅 *Check-out Date:* ${formData.checkOut}
 👥 *Guests:* ${formData.adults} Adults${formData.children > 0 ? `, ${formData.children} Children` : ''}
-🏡 *Stay Preference:* ${formData.accommodation}
+🏡 *Stay Package:* ${formData.accommodation}
 📝 *Special Requests / Occasion:* ${formData.specialRequests.trim() || 'None'}
 ---------------------------------
-Sent from Treetopia Official Website. Please confirm date availability and booking details.`;
+Sent from Treetopia Official Website. Please confirm date availability and package details.`;
 
     setFormattedMessage(message);
     setSubmitted(true);
@@ -123,6 +151,8 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
+
+  const selectedPackageMeta = PACKAGE_OPTIONS.find((p) => p.label === formData.accommodation) || PACKAGE_OPTIONS[2];
 
   return (
     <div
@@ -147,13 +177,13 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
             {/* Modal Header */}
             <div className="mb-8">
               <span className="text-[11px] font-bold uppercase tracking-widest text-gold mb-1 block">
-                Direct Reservation Enquiry
+                Direct Host Enquiry & Booking
               </span>
               <h3 className="font-serif text-2xl sm:text-3xl font-bold text-forest">
                 Enquire for Your Stay
               </h3>
               <p className="text-xs sm:text-sm text-charcoal/70 font-light mt-1.5 leading-relaxed">
-                Fill out your stay dates and requirements below to generate a formatted enquiry.
+                Fill in your details below to generate a pre-formatted WhatsApp enquiry directly to the host.
               </p>
             </div>
 
@@ -181,49 +211,49 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
                 )}
               </div>
 
-              {/* Mobile Phone & Email Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-charcoal uppercase tracking-wider mb-1.5">
-                    Mobile / WhatsApp Number <span className="text-rose-600">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="e.g. 9876543210"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
-                      errors.phone ? 'border-rose-500' : 'border-charcoal/20'
-                    }`}
-                  />
-                  {errors.phone && (
-                    <p className="text-[11px] text-rose-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3.5 h-3.5 mr-1" />
-                      {errors.phone}
-                    </p>
-                  )}
-                </div>
+              {/* Mobile Phone (WhatsApp) */}
+              <div>
+                <label className="block text-xs font-semibold text-charcoal uppercase tracking-wider mb-1.5">
+                  Mobile / WhatsApp Number <span className="text-rose-600">*</span>
+                </label>
+                <input
+                  type="tel"
+                  placeholder="e.g. 9876543210"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className={`w-full px-4 py-2.5 rounded-xl border bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
+                    errors.phone ? 'border-rose-500' : 'border-charcoal/20'
+                  }`}
+                />
+                {errors.phone && (
+                  <p className="text-[11px] text-rose-600 mt-1 flex items-center">
+                    <AlertCircle className="w-3.5 h-3.5 mr-1" />
+                    {errors.phone}
+                  </p>
+                )}
+              </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-charcoal uppercase tracking-wider mb-1.5">
-                    Email Address <span className="text-rose-600">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="e.g. rahul@example.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
-                      errors.email ? 'border-rose-500' : 'border-charcoal/20'
-                    }`}
-                  />
-                  {errors.email && (
-                    <p className="text-[11px] text-rose-600 mt-1 flex items-center">
-                      <AlertCircle className="w-3.5 h-3.5 mr-1" />
-                      {errors.email}
-                    </p>
-                  )}
-                </div>
+              {/* Accommodation Preference Selector */}
+              <div>
+                <label className="block text-xs font-semibold text-charcoal uppercase tracking-wider mb-1.5">
+                  Select Booking Package <span className="text-rose-600">*</span>
+                </label>
+                <select
+                  value={formData.accommodation}
+                  onChange={(e) => setFormData({ ...formData, accommodation: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-charcoal/20 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold text-xs font-medium cursor-pointer"
+                >
+                  {PACKAGE_OPTIONS.map((opt) => (
+                    <option key={opt.code} value={opt.label}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="text-[11px] text-charcoal/60 mt-1.5 block">
+                  {formData.accommodation.includes('Package 3')
+                    ? '★ Package 3 grants 100% private estate exclusivity for your entire group.'
+                    : 'ℹ️ Pods and Bunker share the plunge pool, cricket nets, open kitchen, and cinema.'}
+                </span>
               </div>
 
               {/* Dates Grid */}
@@ -232,16 +262,14 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
                   <label className="block text-xs font-semibold text-charcoal uppercase tracking-wider mb-1.5">
                     Check-in Date <span className="text-rose-600">*</span>
                   </label>
-                  <div className="relative">
-                    <input
-                      type="date"
-                      value={formData.checkIn}
-                      onChange={(e) => setFormData({ ...formData, checkIn: e.target.value })}
-                      className={`w-full px-4 py-2.5 rounded-xl border bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
-                        errors.checkIn ? 'border-rose-500' : 'border-charcoal/20'
-                      }`}
-                    />
-                  </div>
+                  <input
+                    type="date"
+                    value={formData.checkIn}
+                    onChange={(e) => setFormData({ ...formData, checkIn: e.target.value })}
+                    className={`w-full px-4 py-2.5 rounded-xl border bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
+                      errors.checkIn ? 'border-rose-500' : 'border-charcoal/20'
+                    }`}
+                  />
                   {errors.checkIn && (
                     <p className="text-[11px] text-rose-600 mt-1 flex items-center">
                       <AlertCircle className="w-3.5 h-3.5 mr-1" />
@@ -254,16 +282,14 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
                   <label className="block text-xs font-semibold text-charcoal uppercase tracking-wider mb-1.5">
                     Check-out Date <span className="text-rose-600">*</span>
                   </label>
-                  <div className="relative">
-                    <input
-                      type="date"
-                      value={formData.checkOut}
-                      onChange={(e) => setFormData({ ...formData, checkOut: e.target.value })}
-                      className={`w-full px-4 py-2.5 rounded-xl border bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
-                        errors.checkOut ? 'border-rose-500' : 'border-charcoal/20'
-                      }`}
-                    />
-                  </div>
+                  <input
+                    type="date"
+                    value={formData.checkOut}
+                    onChange={(e) => setFormData({ ...formData, checkOut: e.target.value })}
+                    className={`w-full px-4 py-2.5 rounded-xl border bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
+                      errors.checkOut ? 'border-rose-500' : 'border-charcoal/20'
+                    }`}
+                  />
                   {errors.checkOut && (
                     <p className="text-[11px] text-rose-600 mt-1 flex items-center">
                       <AlertCircle className="w-3.5 h-3.5 mr-1" />
@@ -282,12 +308,16 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
                   <input
                     type="number"
                     min="1"
-                    max="12"
+                    max="21"
                     value={formData.adults}
-                    onChange={(e) => setFormData({ ...formData, adults: parseInt(e.target.value) || 1 })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, adults: parseInt(e.target.value) || 1 })
+                    }
                     className="w-full px-4 py-2.5 rounded-xl border border-charcoal/20 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold"
                   />
-                  <span className="text-[10px] text-charcoal/50 mt-1 block">Maximum 12 guests</span>
+                  <span className="text-[10px] text-charcoal/50 mt-1 block">
+                    Capacity: Up to 9 (Pods), 12 (Bunker), or 21 (Combined)
+                  </span>
                 </div>
 
                 <div>
@@ -297,28 +327,14 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
                   <input
                     type="number"
                     min="0"
-                    max="6"
+                    max="8"
                     value={formData.children}
-                    onChange={(e) => setFormData({ ...formData, children: parseInt(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, children: parseInt(e.target.value) || 0 })
+                    }
                     className="w-full px-4 py-2.5 rounded-xl border border-charcoal/20 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-gold"
                   />
                 </div>
-              </div>
-
-              {/* Accommodation Preference */}
-              <div>
-                <label className="block text-xs font-semibold text-charcoal uppercase tracking-wider mb-1.5">
-                  Stay Arrangement
-                </label>
-                <input
-                  type="text"
-                  readOnly
-                  value={formData.accommodation}
-                  className="w-full px-4 py-2.5 rounded-xl border border-charcoal/15 bg-charcoal/5 text-charcoal/80 cursor-not-allowed text-xs font-medium"
-                />
-                <span className="text-[10px] text-charcoal/50 mt-1 block">
-                  Treetopia is rented exclusively as an entire estate for your group.
-                </span>
               </div>
 
               {/* Special Requests */}
@@ -339,7 +355,7 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
               <div className="p-3 bg-forest/5 rounded-xl border border-forest/10 text-[11px] text-forest/80 font-light flex items-start space-x-2">
                 <ShieldCheck className="w-4 h-4 text-forest mt-0.5 flex-shrink-0" />
                 <span>
-                  <strong>Transparent Booking Policy:</strong> Submitting this form prepares an enquiry message. It does not charge your card or guarantee instant dates until confirmed by the host.
+                  <strong>Transparent Booking Policy:</strong> Submitting this form prepares your enquiry message for host WhatsApp verification. To reserve with instant calendar lock, use our verified Airbnb package links.
                 </span>
               </div>
 
@@ -350,7 +366,7 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
                   className="w-full py-3.5 px-6 rounded-xl bg-forest hover:bg-forest-light text-cream text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-lg flex items-center justify-center space-x-2"
                 >
                   <Send className="w-4 h-4 text-gold" />
-                  <span>Generate Booking Enquiry</span>
+                  <span>Generate WhatsApp Enquiry</span>
                 </button>
               </div>
             </form>
@@ -365,11 +381,11 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
             <span className="text-[11px] font-bold uppercase tracking-widest text-gold mb-1 block">
               Enquiry Formatted Successfully
             </span>
-            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-forest mb-3">
-              Enquiry Ready
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-forest mb-2">
+              Ready to Send to Host
             </h3>
             <p className="text-xs sm:text-sm text-charcoal/70 font-light max-w-md mx-auto mb-6 leading-relaxed">
-              We have compiled your stay dates ({formData.checkIn} to {formData.checkOut}) and guest details into a structured booking message.
+              Your dates ({formData.checkIn} to {formData.checkOut}) and stay preference have been compiled into a WhatsApp enquiry.
             </p>
 
             {/* Formatted Message Preview Box */}
@@ -378,26 +394,14 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
             </div>
 
             <div className="space-y-3 max-w-md mx-auto">
-              {/* WhatsApp Button (Active only if configured by owner) */}
-              {siteConfig.contact.isWhatsAppConfigured ? (
-                <button
-                  onClick={handleOpenWhatsApp}
-                  className="w-full py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-widest transition-colors shadow-lg flex items-center justify-center space-x-2"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Open in WhatsApp & Send</span>
-                </button>
-              ) : (
-                <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-left text-[11px] text-amber-900 mb-2">
-                  <div className="font-semibold text-amber-800 mb-1 flex items-center">
-                    <AlertCircle className="w-3.5 h-3.5 mr-1 text-amber-700" />
-                    Host WhatsApp Number Pending Configuration
-                  </div>
-                  <div>
-                    The owner has not yet provided their official WhatsApp number in <code>src/data/siteConfig.ts</code>. You can copy the formatted text below or check instant availability via Airbnb.
-                  </div>
-                </div>
-              )}
+              {/* WhatsApp Button (Active) */}
+              <button
+                onClick={handleOpenWhatsApp}
+                className="w-full py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-widest transition-colors shadow-lg flex items-center justify-center space-x-2"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Send via WhatsApp (+91 99800 14449)</span>
+              </button>
 
               {/* Copy Message Button */}
               <button
@@ -417,14 +421,14 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
                 )}
               </button>
 
-              {/* Verified Airbnb Booking Button */}
+              {/* Direct Link to Selected Airbnb Package */}
               <a
-                href={siteConfig.airbnb.url}
+                href={selectedPackageMeta.airbnbUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full py-3 px-6 rounded-xl bg-white hover:bg-beige/40 text-charcoal border border-charcoal/20 text-xs font-bold uppercase tracking-widest transition-colors shadow-sm flex items-center justify-center space-x-2"
               >
-                <span>View Live Calendar on Airbnb</span>
+                <span>View {selectedPackageMeta.code} Calendar on Airbnb</span>
                 <ExternalLink className="w-4 h-4 text-gold" />
               </a>
 
@@ -433,7 +437,7 @@ Sent from Treetopia Official Website. Please confirm date availability and booki
                 onClick={() => setSubmitted(false)}
                 className="text-xs text-charcoal/60 hover:text-charcoal underline pt-2 font-medium"
               >
-                Edit Dates or Guest Count
+                Edit Dates, Package or Guest Count
               </button>
             </div>
           </div>

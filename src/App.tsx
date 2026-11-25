@@ -16,8 +16,12 @@ import { ExternalLink, MapPin, Instagram, MessageSquare, Phone } from 'lucide-re
 
 export const App: React.FC = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<string>('P3');
 
-  const handleOpenBooking = () => {
+  const handleOpenBooking = (packageCode?: string) => {
+    if (packageCode) {
+      setSelectedPackage(packageCode);
+    }
     setIsBookingModalOpen(true);
   };
 
@@ -29,11 +33,11 @@ export const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-cream text-charcoal flex flex-col font-sans selection:bg-gold selection:text-white">
       {/* 5. Responsive Luxury Navigation Bar */}
-      <Navbar onOpenBooking={handleOpenBooking} />
+      <Navbar onOpenBooking={() => handleOpenBooking('P3')} />
 
       <main className="flex-grow">
         {/* 6A. Cinematic Hero Section */}
-        <Hero onExploreClick={handleExploreClick} onBookClick={handleOpenBooking} />
+        <Hero onExploreClick={handleExploreClick} onBookClick={() => handleOpenBooking('P3')} />
 
         {/* 6B. Brand Introduction Section */}
         <About
@@ -46,17 +50,17 @@ export const App: React.FC = () => {
         {/* 6C. Property Highlights & Amenities */}
         <Highlights />
 
-        {/* 6D. Accommodation Suites & Glamping Tent */}
+        {/* 6D. Accommodation Suites, Bunker, Tent & Packages */}
         <Accommodation onBookClick={handleOpenBooking} />
 
         {/* 6E. Experiences & Activities */}
-        <Experiences onBookClick={handleOpenBooking} />
+        <Experiences onBookClick={() => handleOpenBooking('P3')} />
 
         {/* 6F. Interactive Photo Gallery & Full-Screen Lightbox */}
         <Gallery />
 
         {/* 6G. Guest Occasions & Celebrations */}
-        <Occasions onPlanStay={handleOpenBooking} />
+        <Occasions onPlanStay={() => handleOpenBooking('P3')} />
 
         {/* 6H. Verified Guest Reviews & Airbnb Rating */}
         <Reviews />
@@ -65,7 +69,7 @@ export const App: React.FC = () => {
         <Location />
 
         {/* 6J. Final Booking Call to Action */}
-        <BookingCTA onOpenEnquiry={handleOpenBooking} />
+        <BookingCTA onOpenEnquiry={() => handleOpenBooking('P3')} />
       </main>
 
       {/* 6K. Brand Footer */}
@@ -81,17 +85,32 @@ export const App: React.FC = () => {
                 {siteConfig.subtitle}
               </p>
               <p className="text-xs sm:text-sm text-cream/70 font-light leading-relaxed max-w-md mb-6">
-                A private 9,000 sq.ft countryside retreat in Tamil Nadu where contemporary cantilever architecture
-                meets peaceful seclusion. Featuring a private plunge pool, cricket nets, outdoor cinema, and starlight campfires.
+                A private 9,000 sq.ft countryside retreat in Tamil Nadu featuring two cantilever pods,
+                a spacious ground-level bunker suite, lawn glamping, private plunge pool, cricket nets,
+                open dining pavilion, and outdoor cinema.
               </p>
               <div className="space-y-2 text-xs text-cream/80">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4 text-gold flex-shrink-0" />
-                  <span>{siteConfig.location.shortAddress} · {siteConfig.location.commuteHighlight}</span>
+                  <a
+                    href={siteConfig.location.googleMapsDirectionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gold transition-colors underline"
+                  >
+                    {siteConfig.location.shortAddress} (Open Google Maps)
+                  </a>
                 </div>
                 <div className="flex items-center space-x-2 text-gold">
                   <Phone className="w-4 h-4 text-gold flex-shrink-0" />
-                  <span>Host Coordination via WhatsApp</span>
+                  <a
+                    href={`https://wa.me/${siteConfig.contact.whatsAppNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    Host WhatsApp: {siteConfig.contact.whatsAppDisplay}
+                  </a>
                 </div>
               </div>
             </div>
@@ -104,48 +123,71 @@ export const App: React.FC = () => {
               <ul className="space-y-2.5 text-xs text-cream/80">
                 <li><a href="#home" className="hover:text-gold transition-colors">Home</a></li>
                 <li><a href="#about" className="hover:text-gold transition-colors">About Our Retreat</a></li>
-                <li><a href="#stay" className="hover:text-gold transition-colors">Accommodation</a></li>
+                <li><a href="#stay" className="hover:text-gold transition-colors">Accommodations</a></li>
+                <li><a href="#packages" className="hover:text-gold transition-colors">Booking Packages</a></li>
                 <li><a href="#experiences" className="hover:text-gold transition-colors">Experiences & Cricket</a></li>
                 <li><a href="#gallery" className="hover:text-gold transition-colors">Photo Gallery</a></li>
                 <li><a href="#location" className="hover:text-gold transition-colors">Location & Route</a></li>
               </ul>
             </div>
 
-            {/* Column 3: Booking & Social Media */}
+            {/* Column 3: Airbnb Packages & Social Media */}
             <div>
               <h4 className="text-xs font-bold uppercase tracking-widest text-gold mb-4">
-                Official Channels
+                Official Airbnb Listings
               </h4>
-              <ul className="space-y-3 text-xs text-cream/80">
+              <ul className="space-y-2 text-xs text-cream/80">
                 <li>
                   <a
-                    href={siteConfig.airbnb.url}
+                    href={siteConfig.packages.p1.airbnbUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-cream hover:text-gold transition-colors group"
+                    className="inline-flex items-center text-cream hover:text-gold transition-colors"
                   >
-                    <span>Airbnb Verified Listing (4.65 ★)</span>
-                    <ExternalLink className="ml-1.5 w-3.5 h-3.5 text-gold" />
+                    <span>P1: Two Pods (9 Guests)</span>
+                    <ExternalLink className="ml-1.5 w-3 h-3 text-gold" />
                   </a>
                 </li>
                 <li>
+                  <a
+                    href={siteConfig.packages.p2.airbnbUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-cream hover:text-gold transition-colors"
+                  >
+                    <span>P2: Bunker Suite (12 Guests)</span>
+                    <ExternalLink className="ml-1.5 w-3 h-3 text-gold" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={siteConfig.packages.p3.airbnbUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-cream hover:text-gold transition-colors"
+                  >
+                    <span>P3: Combined Estate (21 Guests)</span>
+                    <ExternalLink className="ml-1.5 w-3 h-3 text-gold" />
+                  </a>
+                </li>
+                <li className="pt-2">
                   <a
                     href={siteConfig.social.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-cream hover:text-gold transition-colors"
                   >
-                    <Instagram className="w-4 h-4 mr-2 text-gold" />
+                    <Instagram className="w-3.5 h-3.5 mr-1.5 text-gold" />
                     <span>{siteConfig.social.instagramHandle}</span>
                   </a>
                 </li>
                 <li className="pt-2">
                   <button
-                    onClick={handleOpenBooking}
+                    onClick={() => handleOpenBooking('P3')}
                     className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gold hover:bg-gold-light text-charcoal text-xs font-bold uppercase tracking-wider rounded transition-colors shadow"
                   >
                     <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
-                    <span>Enquire Dates</span>
+                    <span>WhatsApp Enquiry</span>
                   </button>
                 </li>
               </ul>
@@ -162,7 +204,7 @@ export const App: React.FC = () => {
                 ★ 4.65 Rating (26 Verified Airbnb Reviews)
               </span>
               <span className="text-cream/40">•</span>
-              <span>100% Private Estate</span>
+              <span>Gated Countryside Estate</span>
             </div>
           </div>
         </div>
@@ -171,7 +213,7 @@ export const App: React.FC = () => {
       {/* Floating Sticky Mobile WhatsApp/Book CTA */}
       <div className="fixed bottom-5 right-5 z-40 sm:hidden">
         <button
-          onClick={handleOpenBooking}
+          onClick={() => handleOpenBooking('P3')}
           className="p-3.5 rounded-full bg-gold text-charcoal shadow-2xl hover:bg-gold-light active:scale-95 transition-all flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white"
           aria-label="Enquire on WhatsApp"
         >
@@ -183,6 +225,7 @@ export const App: React.FC = () => {
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
+        initialPackageCode={selectedPackage}
       />
     </div>
   );

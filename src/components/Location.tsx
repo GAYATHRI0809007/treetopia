@@ -1,6 +1,6 @@
 import React from 'react';
 import { siteConfig } from '../data/siteConfig';
-import { MapPin, Navigation, Clock, Sparkles, ExternalLink, ShieldAlert } from 'lucide-react';
+import { MapPin, Navigation, Clock, Sparkles, ExternalLink, CheckCircle2 } from 'lucide-react';
 
 export const Location: React.FC = () => {
   return (
@@ -88,11 +88,11 @@ export const Location: React.FC = () => {
               </a>
             </div>
 
-            {/* Owner Note Alert */}
-            <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 text-[11px] text-amber-900 flex items-start space-x-2">
-              <ShieldAlert className="w-4 h-4 text-amber-700 mt-0.5 flex-shrink-0" />
+            {/* Verified Location Badge */}
+            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200/80 text-[11px] text-emerald-900 flex items-start space-x-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-700 mt-0.5 flex-shrink-0" />
               <span>
-                <strong>Owner Checklist Note:</strong> Please verify and update your exact Google Maps pin coordinates in <code>src/data/siteConfig.ts</code> before official launch.
+                <strong>Verified Property Location:</strong> Pinpointed at Treetopia Farmstay, Unisenatham, Tamil Nadu (~30 mins from Electronic City, Bangalore).
               </span>
             </div>
           </div>

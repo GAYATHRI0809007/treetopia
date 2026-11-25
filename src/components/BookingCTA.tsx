@@ -1,6 +1,5 @@
 import React from 'react';
 import { propertyImages } from '../data/propertyImages';
-import { siteConfig } from '../data/siteConfig';
 import { MessageSquare, ExternalLink, CalendarCheck, ShieldCheck } from 'lucide-react';
 
 interface BookingCTAProps {
@@ -41,8 +40,8 @@ export const BookingCTA: React.FC<BookingCTAProps> = ({ onOpenEnquiry }) => {
 
         {/* Supporting Narrative */}
         <p className="max-w-2xl mx-auto text-base sm:text-lg text-cream/90 font-light leading-relaxed mb-10">
-          Leave the everyday behind. Discover the architectural comfort, undisturbed privacy,
-          and natural beauty of TREETOPIA.
+          Leave the everyday behind. Choose Two Pods (up to 9 guests), The Bunker (up to 12 guests),
+          or reserve the entire 9,000 sq.ft private estate for up to 21 guests.
         </p>
 
         {/* Action Buttons */}
@@ -56,15 +55,13 @@ export const BookingCTA: React.FC<BookingCTAProps> = ({ onOpenEnquiry }) => {
             <span>Enquire on WhatsApp</span>
           </button>
 
-          {/* Airbnb Direct Booking */}
+          {/* Airbnb Packages Anchor */}
           <a
-            href={siteConfig.airbnb.url}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#packages"
             className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-cream bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 hover:border-gold transition-all duration-300 rounded shadow-md transform hover:-translate-y-0.5 group"
           >
             <CalendarCheck className="w-4 h-4 mr-2 text-gold" />
-            <span>Book on Airbnb</span>
+            <span>View 3 Airbnb Packages</span>
             <ExternalLink className="w-3.5 h-3.5 ml-1.5 text-cream/70 group-hover:text-gold transition-colors" />
           </a>
         </div>
@@ -73,7 +70,7 @@ export const BookingCTA: React.FC<BookingCTAProps> = ({ onOpenEnquiry }) => {
         <div className="inline-flex flex-wrap items-center justify-center gap-4 text-xs text-cream/70 font-light">
           <div className="flex items-center">
             <ShieldCheck className="w-3.5 h-3.5 mr-1.5 text-gold" />
-            <span>100% Gated & Private</span>
+            <span>9,000 Sq.Ft Gated Estate</span>
           </div>
           <span className="hidden sm:inline text-white/20">•</span>
           <div className="flex items-center">
@@ -81,7 +78,7 @@ export const BookingCTA: React.FC<BookingCTAProps> = ({ onOpenEnquiry }) => {
           </div>
           <span className="hidden sm:inline text-white/20">•</span>
           <div className="flex items-center">
-            <span>No Shared Amenities</span>
+            <span>Up to 21 Guests (9 + 12)</span>
           </div>
         </div>
       </div>

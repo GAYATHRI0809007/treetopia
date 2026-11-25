@@ -1,9 +1,8 @@
 /**
  * TREETOPIA WEBSITE CONFIGURATION FILE
  * 
- * IMPORTANT FOR OWNER / DEVELOPER:
- * Keep contact details as placeholders until confirmed by the property owner.
- * Do NOT use personal or fake phone numbers as real contact info.
+ * Verified official property details, Airbnb packages, WhatsApp contact,
+ * and location coordinates.
  */
 
 export const siteConfig = {
@@ -12,7 +11,7 @@ export const siteConfig = {
   tagline: 'Escape the Ordinary. Experience TREETOPIA.',
   subtitle: 'Private Luxury Farmstay & Nature Retreat',
 
-  // Location details (Verified from official Airbnb listing)
+  // Location details (Verified from Google Maps & Airbnb)
   location: {
     village: 'Unisenatham',
     taluk: 'Denkanikottai',
@@ -21,15 +20,71 @@ export const siteConfig = {
     shortAddress: 'Unisenatham, Tamil Nadu (Near Denkanikottai)',
     commuteHighlight: 'Approx. 30–40 mins drive from Electronic City, Bangalore',
     
-    // Status flag: false indicates owner must provide exact map pin before public launch
-    isMapPinVerified: false,
-    googleMapsEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31128.520448135836!2d77.7816!3d12.5284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae7bb668d90471%3A0x64e2ce2e6c535787!2sDenkanikottai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1700000000000',
-    googleMapsDirectionsUrl: 'https://maps.google.com/?q=Unisenatham+Denkanikottai+Tamil+Nadu',
+    isMapPinVerified: true,
+    googleMapsDirectionsUrl:
+      'https://www.google.com/maps/place/Treetopia+Farmstay/@12.6338029,77.667287,17z/data=!3m1!4b1!4m9!3m8!1s0x3bae6500146d6e5d:0x49e0157aad0659bb!5m2!4m1!1i2!8m2!3d12.6338029!4d77.667287!16s!g!11x0pb3ts5',
+    googleMapsEmbedUrl:
+      'https://maps.google.com/maps?q=12.6338029,77.667287&hl=en&z=15&output=embed',
+  },
+
+  // Verified Official Airbnb Packages
+  packages: {
+    p1: {
+      id: 'p1',
+      code: 'P1',
+      title: 'Two Pods + Amenities',
+      tagline: 'Two Elevated Cantilever Pods (Pod 1 & Pod 2)',
+      capacity: 'Up to 9 Guests',
+      maxGuests: 9,
+      airbnbUrl: 'https://www.airbnb.com/h/treetopiafarmstay',
+      features: [
+        '2 Modern air-conditioned cantilever pods',
+        '2 King beds + extra bedding on request',
+        '2 Attached designer slate bathrooms',
+        'Private sunset balconies & smart TVs',
+        'Shared access to pool, cricket nets & campfire',
+      ],
+      sharedNote: 'Plunge pool, cricket nets, open kitchen & cinema are shared with Bunker guests.',
+    },
+    p2: {
+      id: 'p2',
+      code: 'P2',
+      title: 'Bunker + Amenities',
+      tagline: 'Spacious Ground-Level Nature Suite',
+      capacity: 'Up to 12 Guests',
+      maxGuests: 12,
+      airbnbUrl: 'https://www.airbnb.com/h/treetopiabunk',
+      features: [
+        'Spacious architectural ground-level retreat',
+        'King bed + Queen bunk beds',
+        'Attached modern bathroom',
+        'Rooftop cricket net access & patio steps to pool',
+        'Shared access to pool, cricket nets & campfire',
+      ],
+      sharedNote: 'Plunge pool, cricket nets, open kitchen & cinema are shared with Pods guests.',
+    },
+    p3: {
+      id: 'p3',
+      code: 'P3',
+      title: 'Two Pods + Bunker + Amenities',
+      tagline: '100% Private 9,000 Sq.Ft Estate Exclusivity',
+      capacity: 'Up to 21 Guests (9 + 12)',
+      maxGuests: 21,
+      airbnbUrl: 'https://www.airbnb.com/h/podandbunker',
+      features: [
+        'Entire 9,000 sq.ft private estate exclusively for your group',
+        'Both Cantilever Pods (Pod 1 & Pod 2) + The Bunker + Tent option',
+        'Private plunge pool exclusively for your party',
+        'Exclusive use of cricket nets, projector cinema & campfire',
+        'Dedicated open kitchen, BBQ bar & dining pavilion',
+      ],
+      sharedNote: 'Total estate privacy. Zero shared amenities—100% exclusive to your reservation.',
+    },
   },
 
   // Verified Official Airbnb Listing Reference
   airbnb: {
-    url: 'https://www.airbnb.co.in/rooms/1339863510144669214',
+    url: 'https://www.airbnb.com/h/treetopiafarmstay',
     rating: 4.65,
     reviewCount: 26,
     badgeText: 'Guest Favorite on Airbnb',
@@ -38,42 +93,31 @@ export const siteConfig = {
 
   // Official Social Media
   social: {
-    instagram: 'https://www.instagram.com/treetopia_farmstay?gwpx=MWZha3JhNjFndjZyNQ%3D%3D',
+    instagram: 'https://www.instagram.com/treetopia_farmstay/',
     instagramHandle: '@treetopia_farmstay',
   },
 
-  // Owner Contact Information (PENDING OWNER CONFIRMATION)
+  // Owner Contact Information (No Email - WhatsApp Only)
   contact: {
-    // Flag indicating whether the owner has provided official business contact details
-    isWhatsAppConfigured: false,
-    isEmailConfigured: false,
-
-    // Placeholder strings - replace with real host WhatsApp number before launch
-    // Format required: Country code without '+' or spaces, e.g. '919876543210'
-    whatsAppNumber: '', 
-    whatsAppDisplay: '[PENDING OWNER NUMBER - Add in siteConfig.ts]',
-    
-    // Placeholder email - replace with real host email before launch
-    email: '',
-    emailDisplay: '[PENDING OWNER EMAIL - Add in siteConfig.ts]',
-    
-    // Verified stay timings from Airbnb
+    isWhatsAppConfigured: true,
+    whatsAppNumber: '919980014449',
+    whatsAppDisplay: '+91 99800 14449',
     checkInTime: '2:00 PM',
     checkOutTime: '11:00 AM',
   },
 
-  // Capacity & House Rules (Verified from Airbnb)
+  // Capacity & House Rules
   propertyDetails: {
-    plotSize: '9,000 sq.ft private fenced plot',
-    maxGuests: 12,
-    baseBedrooms: 2,
-    baseBeds: 3,
-    bathrooms: 2,
+    plotSize: '9,000 sq.ft private gated estate',
+    maxGuestsTotal: 21,
+    accommodations: 'Two Pods (9 guests) + One Bunker (12 guests) + One Glamping Tent',
     rules: [
-      'Entire property is exclusively for the booking party.',
+      'Entire estate exclusivity when booking Package 3 (Combined).',
+      'When booked individually, Pods and Bunker guests share the plunge pool, cricket nets, open kitchen, and outdoor cinema.',
       'Families and working professionals preferred.',
-      'No student groups or loud late-night party events that disturb the countryside.',
+      'No loud late-night party events that disturb the peaceful countryside.',
       'Respect nature and property cleanliness.',
     ],
   },
 };
+

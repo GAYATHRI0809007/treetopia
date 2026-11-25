@@ -40,8 +40,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onBookClick }) => {
 
         {/* Supporting Narrative */}
         <p className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-cream/90 font-light leading-relaxed mb-10 drop-shadow">
-          A private nature retreat where modern cantilever architecture meets
-          peaceful surroundings, a private plunge pool, and unforgettable outdoor experiences.
+          A private nature retreat where modern cantilever architecture and ground-level bunker comfort
+          meet peaceful surroundings, a private plunge pool, and unforgettable outdoor experiences.
         </p>
 
         {/* Primary and Secondary Action Buttons */}
@@ -72,15 +72,15 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onBookClick }) => {
           <div className="grid grid-cols-4 gap-4 py-3 px-6 rounded-xl bg-charcoal/60 backdrop-blur-md border border-white/10 text-cream/80 text-center divide-x divide-white/10">
             <div>
               <div className="text-base font-serif font-bold text-gold">9,000 sq.ft</div>
-              <div className="text-[10px] uppercase tracking-wider text-cream/60">Private Plot</div>
+              <div className="text-[10px] uppercase tracking-wider text-cream/60">Private Estate</div>
             </div>
             <div>
-              <div className="text-base font-serif font-bold text-gold">2 Pods + 1 Tent</div>
-              <div className="text-[10px] uppercase tracking-wider text-cream/60">Architectural Stay</div>
+              <div className="text-base font-serif font-bold text-gold">2 Pods · Bunker · Tent</div>
+              <div className="text-[10px] uppercase tracking-wider text-cream/60">Accommodations</div>
             </div>
             <div>
-              <div className="text-base font-serif font-bold text-gold">Private Pool</div>
-              <div className="text-[10px] uppercase tracking-wider text-cream/60">& Cricket Nets</div>
+              <div className="text-base font-serif font-bold text-gold">Up to 21 Guests</div>
+              <div className="text-[10px] uppercase tracking-wider text-cream/60">Flexible Capacity</div>
             </div>
             <div>
               <div className="text-base font-serif font-bold text-gold">4.65 ★ Verified</div>
