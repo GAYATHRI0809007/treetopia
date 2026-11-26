@@ -14,12 +14,15 @@ export const Reviews: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<'all' | 'google' | 'airbnb'>('all');
   const [isPaused, setIsPaused] = useState(false);
 
-  // References for continuous smooth animation and measurement
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // References for GPU-accelerated continuous smooth animation and measurement
+  const trackRef = useRef<HTMLDivElement>(null);
   const firstSetRef = useRef<HTMLDivElement>(null);
   const singleSetWidthRef = useRef<number>(0);
+  const offsetRef = useRef<number>(0);
   const isPausedRef = useRef<boolean>(false);
-  const isPressedRef = useRef<boolean>(false);
+  const isDraggingRef = useRef<boolean>(false);
+  const dragStartXRef = useRef<number>(0);
+  const dragStartOffsetRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(performance.now());
   const animationFrameIdRef = useRef<number | null>(null);
 
@@ -35,8 +38,7 @@ export const Reviews: React.FC = () => {
   const airbnbUniqueCount = reviewsData.filter((r) => r.source === 'airbnb').length;
 
   // Build a seamless looping sequence.
-  // To ensure the sequence is wider than any viewport before repeating,
-  // we repeat the filtered set so baseSet has at least 8-12 cards.
+  // Repeat the filtered set so one cycle is always wider than any viewport.
   const baseSet = useMemo(() => {
     if (filteredReviews.length === 0) return [];
     const repeatTimes = Math.max(2, Math.ceil(12 / filteredReviews.length));
@@ -52,6 +54,18 @@ export const Reviews: React.FC = () => {
     return items;
   }, [filteredReviews, activeFilter]);
 
+  const applyTransform = useCallback((offset: number) => {
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translate3d(${-offset}px, 0, 0)`;
+    }
+  }, []);
+
+  const wrapOffset = useCallback((offset: number) => {
+    const width = singleSetWidthRef.current;
+    if (width <= 0) return 0;
+    return ((offset % width) + width) % width;
+  }, []);
+
   // Recalculate width of one complete set
   const updateSingleSetWidth = useCallback(() => {
     if (firstSetRef.current) {
@@ -63,38 +77,33 @@ export const Reviews: React.FC = () => {
   // Update width on mount, filter change, or window resize
   useEffect(() => {
     updateSingleSetWidth();
-    // Reset scroll to 0 on filter change
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollLeft = 0;
-    }
+    offsetRef.current = 0;
+    applyTransform(0);
 
     const handleResize = () => {
       updateSingleSetWidth();
+      offsetRef.current = wrapOffset(offsetRef.current);
+      applyTransform(offsetRef.current);
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
-  }, [baseSet, updateSingleSetWidth]);
+  }, [baseSet, updateSingleSetWidth, applyTransform, wrapOffset]);
 
-  // Continuous smooth auto-scrolling loop via requestAnimationFrame
+  // Continuous sub-pixel smooth auto-scrolling loop via requestAnimationFrame
   useEffect(() => {
     lastTimeRef.current = performance.now();
 
-    const scrollSpeedPixelsPerSecond = 38; // Comfortable, highly readable reading speed (~38px/s)
+    const scrollSpeedPixelsPerSecond = 48; // Smooth, clearly visible reading pace
 
     const animateLoop = (currentTime: number) => {
-      const deltaTime = Math.min(currentTime - lastTimeRef.current, 50); // cap delta at 50ms to prevent jumps on tab focus
+      const deltaTime = Math.min(currentTime - lastTimeRef.current, 50);
       lastTimeRef.current = currentTime;
 
-      if (!isPausedRef.current && scrollContainerRef.current && singleSetWidthRef.current > 0) {
-        const container = scrollContainerRef.current;
+      if (!isPausedRef.current && !isDraggingRef.current && singleSetWidthRef.current > 0) {
         const movement = (scrollSpeedPixelsPerSecond * deltaTime) / 1000;
-        container.scrollLeft += movement;
-
-        // When the container scrolls past one complete set, seamlessly wrap back
-        if (container.scrollLeft >= singleSetWidthRef.current) {
-          container.scrollLeft -= singleSetWidthRef.current;
-        }
+        offsetRef.current = wrapOffset(offsetRef.current + movement);
+        applyTransform(offsetRef.current);
       }
 
       animationFrameIdRef.current = requestAnimationFrame(animateLoop);
@@ -107,13 +116,36 @@ export const Reviews: React.FC = () => {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
-  }, []);
+  }, [applyTransform, wrapOffset]);
 
   // Sync pause state with ref
   const setPausedState = useCallback((paused: boolean) => {
     isPausedRef.current = paused;
     setIsPaused(paused);
   }, []);
+
+  // Smoothly animate a manual step (Prev / Next)
+  const animateStepBy = useCallback(
+    (delta: number) => {
+      if (singleSetWidthRef.current <= 0) return;
+      const startOffset = offsetRef.current;
+      const duration = 420;
+      const startTime = performance.now();
+
+      const stepFrame = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+        offsetRef.current = wrapOffset(startOffset + delta * eased);
+        applyTransform(offsetRef.current);
+        if (progress < 1) {
+          requestAnimationFrame(stepFrame);
+        }
+      };
+
+      requestAnimationFrame(stepFrame);
+    },
+    [applyTransform, wrapOffset]
+  );
 
   // Manual Step Navigation
   const getCardStep = useCallback(() => {
@@ -125,33 +157,36 @@ export const Reviews: React.FC = () => {
   }, []);
 
   const handlePrev = () => {
-    if (!scrollContainerRef.current || singleSetWidthRef.current <= 0) return;
-    const container = scrollContainerRef.current;
-    const step = getCardStep();
-
-    if (container.scrollLeft <= step) {
-      // Seamlessly wrap to second track before scrolling backward
-      container.scrollLeft += singleSetWidthRef.current;
-    }
-    container.scrollBy({ left: -step, behavior: 'smooth' });
+    animateStepBy(-getCardStep());
   };
 
   const handleNext = () => {
-    if (!scrollContainerRef.current || singleSetWidthRef.current <= 0) return;
-    const container = scrollContainerRef.current;
-    const step = getCardStep();
-
-    container.scrollBy({ left: step, behavior: 'smooth' });
+    animateStepBy(getCardStep());
   };
 
-  // Keep scrollLeft normalized during manual touch drag or smooth scrolling
-  const handleScroll = () => {
-    if (!scrollContainerRef.current || singleSetWidthRef.current <= 0) return;
-    const container = scrollContainerRef.current;
-    if (container.scrollLeft >= singleSetWidthRef.current * 1.5) {
-      container.scrollLeft -= singleSetWidthRef.current;
-    } else if (container.scrollLeft <= 0) {
-      container.scrollLeft += singleSetWidthRef.current;
+  // Pointer drag support for desktop & mobile touch
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('a, button')) return;
+    isDraggingRef.current = true;
+    dragStartXRef.current = e.clientX;
+    dragStartOffsetRef.current = offsetRef.current;
+    setPausedState(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const dx = e.clientX - dragStartXRef.current;
+    offsetRef.current = wrapOffset(dragStartOffsetRef.current - dx);
+    applyTransform(offsetRef.current);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    setPausedState(false);
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
     }
   };
 
@@ -385,39 +420,21 @@ export const Reviews: React.FC = () => {
 
         {/* Seamless Continuously Looping Carousel Track */}
         <div
-          ref={scrollContainerRef}
-          onScroll={handleScroll}
           onMouseEnter={() => setPausedState(true)}
           onMouseLeave={() => {
-            if (!isPressedRef.current) setPausedState(false);
+            if (!isDraggingRef.current) setPausedState(false);
           }}
-          onPointerDown={() => {
-            isPressedRef.current = true;
-            setPausedState(true);
-          }}
-          onPointerUp={() => {
-            isPressedRef.current = false;
-            setPausedState(false);
-          }}
-          onPointerCancel={() => {
-            isPressedRef.current = false;
-            setPausedState(false);
-          }}
-          onTouchStart={() => {
-            isPressedRef.current = true;
-            setPausedState(true);
-          }}
-          onTouchEnd={() => {
-            isPressedRef.current = false;
-            setPausedState(false);
-          }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
           onFocus={() => setPausedState(true)}
           onBlur={() => setPausedState(false)}
-          className="overflow-x-auto scrollbar-none py-2 select-none cursor-grab active:cursor-grabbing"
-          style={{ scrollBehavior: 'auto', WebkitOverflowScrolling: 'touch' }}
+          className="overflow-hidden py-2 select-none cursor-grab active:cursor-grabbing"
+          style={{ touchAction: 'pan-y' }}
         >
           {baseSet.length > 0 ? (
-            <div className="flex w-max">
+            <div ref={trackRef} className="flex w-max will-change-transform">
               {/* Primary Track Set */}
               <div ref={firstSetRef} className="flex space-x-6 shrink-0">
                 {baseSet.map(renderCard)}
