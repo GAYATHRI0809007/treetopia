@@ -1,13 +1,9 @@
 import React from 'react';
 import { propertyImages } from '../data/propertyImages';
-import { Trophy, Film, Waves, Flame, Sparkles, Check, ArrowUpRight } from 'lucide-react';
+import { Trophy, Film, Waves, Flame, Sparkles, Check } from 'lucide-react';
 
-interface ExperiencesProps {
-  onBookClick?: () => void;
-}
-
-export const Experiences: React.FC<ExperiencesProps> = ({ onBookClick }) => {
-  const experiences = [
+export const Experiences: React.FC = () => {
+  const activities = [
     {
       id: 'cricket',
       title: 'Floodlit Cricket Nets',
@@ -71,7 +67,7 @@ export const Experiences: React.FC<ExperiencesProps> = ({ onBookClick }) => {
   ];
 
   return (
-    <section id="experiences" className="py-24 sm:py-32 bg-forest text-cream relative overflow-hidden">
+    <section id="activities" className="py-24 sm:py-32 bg-forest text-cream relative overflow-hidden">
       {/* Decorative ambient elements */}
       <div className="absolute top-1/2 left-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-black/20 rounded-full blur-3xl pointer-events-none" />
@@ -82,33 +78,33 @@ export const Experiences: React.FC<ExperiencesProps> = ({ onBookClick }) => {
           <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 mb-4">
             <Sparkles className="w-3.5 h-3.5 text-gold" />
             <span className="text-xs font-semibold uppercase tracking-widest text-gold">
-              Curated Outdoor Moments
+              Estate Activities
             </span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-cream mb-4">
-            Make Every Moment <br />
-            <span className="italic font-normal text-gold">An Experience.</span>
+            Outdoor Activities <br />
+            <span className="italic font-normal text-gold">& Recreation.</span>
           </h2>
           <p className="text-cream/80 text-base sm:text-lg font-light leading-relaxed">
             At Treetopia, luxury means having space to play, celebrate, and unwind together.
-            All experiences are included directly within your private stay.
+            All activities are included directly within your private stay.
           </p>
         </div>
 
         {/* 2x2 Feature Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10">
-          {experiences.map((exp) => {
-            const Icon = exp.icon;
+          {activities.map((item) => {
+            const Icon = item.icon;
             return (
               <div
-                key={exp.id}
+                key={item.id}
                 className="group bg-white/5 hover:bg-white/[0.08] rounded-2xl overflow-hidden border border-white/10 hover:border-gold/50 transition-all duration-300 flex flex-col sm:flex-row shadow-xl"
               >
                 {/* Photo Side */}
                 <div className="sm:w-1/2 relative h-64 sm:h-auto overflow-hidden">
                   <img
-                    src={exp.image}
-                    alt={exp.title}
+                    src={item.image}
+                    alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
@@ -122,36 +118,30 @@ export const Experiences: React.FC<ExperiencesProps> = ({ onBookClick }) => {
                 <div className="sm:w-1/2 p-6 sm:p-8 flex flex-col justify-between">
                   <div>
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-gold block mb-1">
-                      {exp.subtitle}
+                      {item.subtitle}
                     </span>
                     <h3 className="font-serif text-xl sm:text-2xl font-bold text-cream mb-3 group-hover:text-gold transition-colors">
-                      {exp.title}
+                      {item.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-cream/70 font-light leading-relaxed mb-6">
-                      {exp.description}
+                      {item.description}
                     </p>
 
                     <div className="space-y-2 mb-6">
-                      {exp.highlights.map((item, idx) => (
+                      {item.highlights.map((highlight, idx) => (
                         <div key={idx} className="flex items-center text-xs text-cream/80">
                           <Check className="w-3.5 h-3.5 text-gold mr-2 flex-shrink-0" />
-                          <span>{item}</span>
+                          <span>{highlight}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-[11px] uppercase tracking-wider text-cream/60">
+                  {/* Card Bottom: Only exact wording 'Included with Stay' */}
+                  <div className="pt-4 border-t border-white/10">
+                    <span className="text-xs uppercase tracking-wider text-gold font-semibold">
                       Included with Stay
                     </span>
-                    <button
-                      onClick={onBookClick}
-                      className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-gold hover:text-gold-light transition-colors group/btn"
-                    >
-                      <span>Book Stay</span>
-                      <ArrowUpRight className="ml-1 w-3.5 h-3.5 transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                    </button>
                   </div>
                 </div>
               </div>

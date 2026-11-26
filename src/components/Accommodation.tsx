@@ -11,24 +11,54 @@ import {
   X,
   ChevronRight,
   Info,
-  CalendarCheck,
   Building2,
   Crown,
   Layers,
+  ChevronLeft,
 } from 'lucide-react';
 
-interface AccommodationProps {
-  onBookClick?: (selectedPackageCode?: string) => void;
+export interface PackageDetail {
+  code: string;
+  title: string;
+  tagline: string;
+  tag: string;
+  badge: string;
+  badgeColor: string;
+  isPrimary: boolean;
+  capacity: string;
+  beds: string;
+  baths: string;
+  icon: React.ComponentType<{ className?: string }>;
+  airbnbUrl: string;
+  image: string;
+  gallery: string[];
+  shortSummary: string;
+  fullDescription: string;
+  sharedNote: string;
+  exclusivityBadge: string;
+  features: string[];
+  amenities: string[];
+  idealFor: string;
 }
 
-export const Accommodation: React.FC<AccommodationProps> = ({ onBookClick }) => {
-  const [selectedUnit, setSelectedUnit] = useState<number | null>(null);
+export const Accommodation: React.FC = () => {
+  const [selectedPackageCode, setSelectedPackageCode] = useState<string | null>(null);
+  const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
 
-  const accommodations = [
+  const packages: PackageDetail[] = [
     {
-      id: 1,
-      title: 'Two Cantilever Pods (Pod 1 & 2)',
+      code: 'P1',
+      title: 'Two Pods + Amenities',
+      tagline: 'Two Elevated Cantilever Architectural Suites (Pod 1 & Pod 2)',
       tag: 'Elevated Architectural Suites',
+      badge: 'Package 1',
+      badgeColor: 'bg-forest text-cream border border-white/10',
+      isPrimary: false,
+      capacity: 'Up to 9 Guests',
+      beds: '2 King Beds + Extra Mattresses on Request',
+      baths: '2 Attached Designer Slate Bathrooms',
+      icon: Building2,
+      airbnbUrl: siteConfig.packages.p1.airbnbUrl,
       image: propertyImages.accommodation.podMaster,
       gallery: [
         propertyImages.accommodation.podMaster,
@@ -37,14 +67,25 @@ export const Accommodation: React.FC<AccommodationProps> = ({ onBookClick }) => 
         propertyImages.accommodation.podTvView,
         propertyImages.accommodation.luxuryBathroom,
         propertyImages.experiences.teaCoffeeStation,
+        propertyImages.nightExterior,
+        propertyImages.grounds.daylightPodsAndPool,
       ],
       shortSummary:
-        'Two air-conditioned cantilever bedroom pods elevated among trees, featuring panoramic glass balconies, plush king beds, and attached designer slate bathrooms.',
-      capacity: 'Up to 9 Guests',
-      beds: '2 King Beds + Extra Mattresses on Request',
-      baths: '2 Attached Slate Bathrooms',
-      packageCode: 'P1',
-      airbnbUrl: siteConfig.packages.p1.airbnbUrl,
+        'Two air-conditioned cantilever bedroom pods elevated among trees, featuring panoramic glass sunset balconies, plush king beds, and attached designer slate bathrooms.',
+      fullDescription:
+        'Experience elevated architectural luxury in Pod 1 and Pod 2. Perched above the natural landscape on modern steel cantilever structures, each pod features floor-to-ceiling panoramic glass doors opening onto private sunset balconies, individual air conditioning, smart TVs, high-speed Wi-Fi, and en-suite slate bathrooms with fresh linens and hot showers.',
+      sharedNote:
+        'Plunge pool, cricket nets, open kitchen & bar, campfire lounge, and outdoor cinema are shared with Bunker guests.',
+      exclusivityBadge: 'Shared Estate Amenities',
+      features: [
+        '2 Modern air-conditioned cantilever pods (Pod 1 & Pod 2)',
+        '2 King beds + extra bedding on request (up to 9 guests)',
+        '2 Attached private slate bathrooms with hot showers',
+        'Floor-to-ceiling glass & private sunset balconies',
+        'Smart TVs with streaming & high-speed Wi-Fi',
+        'Electric kettle, tea & coffee preparation station',
+        'Shared access to pool, cricket nets, cinema & campfire',
+      ],
       amenities: [
         'Air Conditioning & Heating in both pods',
         '2 Attached private bathrooms with hot water',
@@ -53,13 +94,23 @@ export const Accommodation: React.FC<AccommodationProps> = ({ onBookClick }) => 
         'High-speed Wi-Fi & vanity work desks',
         'Electric kettle, tea & coffee station',
         'Shared access to plunge pool, cricket nets & campfire',
+        'Daily caretaker assistance & 24/7 power backup',
       ],
-      idealFor: 'Couples, families, and small friend groups seeking architectural luxury.',
+      idealFor: 'Couples, families, and small friend groups seeking modern architectural elegance.',
     },
     {
-      id: 2,
-      title: 'The Treetopia Bunker',
-      tag: 'Spacious Ground-Level Nature Suite',
+      code: 'P2',
+      title: 'Bunker + Amenities',
+      tagline: 'Spacious Ground-Level Nature Suite',
+      tag: 'Spacious Nature Suite',
+      badge: 'Package 2',
+      badgeColor: 'bg-charcoal text-cream border border-white/10',
+      isPrimary: false,
+      capacity: 'Up to 12 Guests',
+      beds: '1 King Bed + Queen Bunk Beds',
+      baths: '1 Attached Modern Bathroom',
+      icon: Layers,
+      airbnbUrl: siteConfig.packages.p2.airbnbUrl,
       image: propertyImages.accommodation.bunkerExterior,
       gallery: [
         propertyImages.accommodation.bunkerExterior,
@@ -67,478 +118,435 @@ export const Accommodation: React.FC<AccommodationProps> = ({ onBookClick }) => 
         propertyImages.accommodation.bunkerDining,
         propertyImages.accommodation.bunkerCampfire,
         propertyImages.accommodation.bunkerNightLawn,
-      ],
-      shortSummary:
-        'A generous ground-level architectural retreat nestled in fruit trees with a king-size bed, queen-size bunk beds, terrace cricket net access, and patio steps to the plunge pool.',
-      capacity: 'Up to 12 Guests',
-      beds: '1 King Bed + Queen Bunk Beds',
-      baths: '1 Attached Modern Bathroom',
-      packageCode: 'P2',
-      airbnbUrl: siteConfig.packages.p2.airbnbUrl,
-      amenities: [
-        'King-size master bed + Queen bunk bed setup',
-        'Attached modern bathroom with fresh linens',
-        'Direct ground-level veranda stepping out to plunge pool',
-        'Terrace rooftop access to professional cricket nets',
-        'Covered open-air dining pavilion and kitchen access',
-        'High-speed Wi-Fi & electric backup power',
-        'Shared access to pool, cinema, cricket nets & campfire',
-      ],
-      idealFor: 'Larger families, team retreats, and friends wanting connected comfort.',
-    },
-    {
-      id: 3,
-      title: 'Luxury Glamping Tent',
-      tag: 'Outdoor Countryside Camp',
-      image: propertyImages.accommodation.tentCamping,
-      gallery: [
-        propertyImages.accommodation.tentCamping,
-        propertyImages.accommodation.tentNight,
-        propertyImages.experiences.movieAndCampfire,
+        propertyImages.experiences.nightPoolAndBar,
         propertyImages.experiences.cricketNets,
       ],
       shortSummary:
-        'A spacious, weatherproof family glamping dome tent pitched directly on the lawn facing the plunge pool and campfire. Ideal for stargazers and extra group capacity.',
-      capacity: '3 - 4 Guests',
-      beds: 'Plush Camp Bedding & Mattresses',
-      baths: 'Full Access to Ground Floor Restroom Facilities',
-      packageCode: 'P3',
-      airbnbUrl: siteConfig.packages.p3.airbnbUrl,
-      amenities: [
-        'Spacious, weather-resistant family dome tent',
-        'Pitched on soft lawn overlooking the plunge pool',
-        'Plush foam mattresses, pillows & clean sheets',
-        'Direct proximity to starlight campfire seating',
-        'Surrounded by fruit trees and garden lighting',
-        'Available alongside Pods or Bunker reservations',
+        'A generous ground-level architectural retreat nestled in fruit trees with a king-size bed, queen-size bunk beds, terrace cricket net access, and patio steps to the plunge pool.',
+      fullDescription:
+        'The Treetopia Bunker is a generous ground-level nature suite built for group comfort and camaraderie. Set amidst lush fruit trees, it features a master king-size bed, sturdy queen-size bunk beds, an attached modern bathroom, veranda steps leading out to the plunge pool, and rooftop staircase access to the floodlit cricket nets.',
+      sharedNote:
+        'Plunge pool, cricket nets, open kitchen & bar, campfire lounge, and outdoor cinema are shared with Pods guests.',
+      exclusivityBadge: 'Shared Estate Amenities',
+      features: [
+        'Spacious architectural ground-level retreat (up to 12 guests)',
+        'King-size master bed + solid queen-size bunk beds',
+        'Attached modern bathroom with fresh linens & hot water',
+        'Direct ground-level veranda stepping out to plunge pool',
+        'Terrace rooftop access to professional cricket nets',
+        'Covered open-air dining pavilion and kitchen access',
+        'Shared access to pool, outdoor cinema, cricket nets & campfire',
       ],
-      idealFor: 'Children, nature lovers, and extra guest capacity.',
-    },
-  ];
-
-  const packages = [
-    {
-      code: 'P1',
-      title: siteConfig.packages.p1.title,
-      tagline: siteConfig.packages.p1.tagline,
-      capacity: siteConfig.packages.p1.capacity,
-      airbnbUrl: siteConfig.packages.p1.airbnbUrl,
-      badge: 'Package 1',
-      badgeColor: 'bg-forest text-cream',
-      features: siteConfig.packages.p1.features,
-      sharedNote: siteConfig.packages.p1.sharedNote,
-      icon: Building2,
-      isPrimary: false,
-    },
-    {
-      code: 'P2',
-      title: siteConfig.packages.p2.title,
-      tagline: siteConfig.packages.p2.tagline,
-      capacity: siteConfig.packages.p2.capacity,
-      airbnbUrl: siteConfig.packages.p2.airbnbUrl,
-      badge: 'Package 2',
-      badgeColor: 'bg-charcoal text-cream',
-      features: siteConfig.packages.p2.features,
-      sharedNote: siteConfig.packages.p2.sharedNote,
-      icon: Layers,
-      isPrimary: false,
+      amenities: [
+        'King-size master bed + Queen bunk bed setup',
+        'Attached modern bathroom with fresh towels & hot shower',
+        'Direct ground-level veranda stepping out to plunge pool',
+        'Terrace rooftop access to professional cricket nets',
+        'Covered open-air dining pavilion and kitchen access',
+        'High-speed Wi-Fi & electric generator power backup',
+        'Shared access to pool, cinema, cricket nets & campfire',
+        'Full orchard grounds access & dedicated caretaker service',
+      ],
+      idealFor: 'Larger families, team retreats, and friends seeking spacious connected comfort.',
     },
     {
       code: 'P3',
-      title: siteConfig.packages.p3.title,
-      tagline: siteConfig.packages.p3.tagline,
-      capacity: siteConfig.packages.p3.capacity,
-      airbnbUrl: siteConfig.packages.p3.airbnbUrl,
+      title: 'Two Pods + Bunker + Amenities',
+      tagline: 'Combined 9,000 Sq.Ft Private Estate Exclusivity',
+      tag: '100% Private Estate Exclusivity',
       badge: 'Package 3 · Best Value',
-      badgeColor: 'bg-gold text-charcoal font-bold',
-      features: siteConfig.packages.p3.features,
-      sharedNote: siteConfig.packages.p3.sharedNote,
-      icon: Crown,
+      badgeColor: 'bg-gold text-charcoal font-bold border border-gold/40 shadow-sm',
       isPrimary: true,
+      capacity: 'Up to 21 Guests (9 + 12)',
+      beds: 'Both Pods + Bunker Suite + Lawn Glamping Tent',
+      baths: '3 Modern Bathrooms + Ground Restrooms',
+      icon: Crown,
+      airbnbUrl: siteConfig.packages.p3.airbnbUrl,
+      image: propertyImages.grounds.estateOverviewDusk,
+      gallery: [
+        propertyImages.grounds.estateOverviewDusk,
+        propertyImages.accommodation.podMaster,
+        propertyImages.accommodation.podSecond,
+        propertyImages.accommodation.bunkerExterior,
+        propertyImages.accommodation.bunkerRoom,
+        propertyImages.accommodation.tentCamping,
+        propertyImages.nightExterior,
+        propertyImages.experiences.movieAndCampfire,
+        propertyImages.experiences.openBarDaylight,
+        propertyImages.grounds.daylightPodsAndPool,
+      ],
+      shortSummary:
+        'The entire 9,000 sq.ft private gated estate exclusively for your group: both cantilever pods, the bunker suite, lawn glamping, private pool, cricket nets, cinema, and campfire.',
+      fullDescription:
+        'The ultimate private countryside escape. Reserving Package 3 grants your group 100% exclusive access to the entire 9,000 sq.ft gated estate with zero shared facilities. Enjoy both cantilever pods, the spacious bunker suite, optional weatherproof lawn glamping tent, private plunge pool, floodlit cricket nets, stone campfire lounge, outdoor projector cinema, and open-air BBQ dining pavilion.',
+      sharedNote:
+        '100% Private Estate Exclusivity. Zero shared amenities—all 9,000 sq.ft of grounds, pool, cricket nets, cinema, and dining are 100% exclusive to your reservation.',
+      exclusivityBadge: '100% Private Estate Exclusivity',
+      features: [
+        'Entire 9,000 sq.ft private estate exclusively for your group (up to 21 guests)',
+        'Both Cantilever Pods (Pod 1 & Pod 2) + The Bunker suite',
+        'Weatherproof family lawn glamping dome tent option included',
+        'Private plunge pool exclusively for your party',
+        'Exclusive access to floodlit cricket nets, campfire & movie cinema',
+        'Dedicated open kitchen, BBQ bar counter & dining pavilion',
+        'Complete privacy with 24/7 power backup and on-site caretaker',
+      ],
+      amenities: [
+        '100% private estate reservation—no other guests on property',
+        'Both elevated cantilever suites with panoramic glass & AC',
+        'Ground-level Bunker suite with king & queen bunk beds',
+        'Weatherproof lawn glamping dome tent with plush bedding',
+        'Private plunge pool exclusively for your group',
+        'Private floodlit cricket nets with professional turf pitch',
+        'Stone campfire pit with starlight seating & outdoor movie screen',
+        'Covered dining pavilion, open kitchen & barbecue bar counter',
+      ],
+      idealFor: 'Extended family reunions, milestone celebrations, and group retreats demanding complete privacy.',
     },
   ];
 
+  const activePackage = packages.find((p) => p.code === selectedPackageCode);
+
   return (
-    <section id="stay" className="py-24 sm:py-32 bg-cream text-charcoal relative">
+    <section id="properties" className="py-24 sm:py-32 bg-cream text-charcoal relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-forest/10 border border-forest/15 mb-4">
             <Sparkles className="w-3.5 h-3.5 text-gold" />
             <span className="text-xs font-bold uppercase tracking-widest text-forest">
-              Architectural Accommodations
+              Properties & Stay Packages
             </span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-forest mb-4">
-            Visual Accommodations <br />
-            <span className="italic font-normal text-gold">& Private Sanctuary.</span>
+            Our Official <br />
+            <span className="italic font-normal text-gold">Stay Packages.</span>
           </h2>
           <p className="text-charcoal/80 text-base sm:text-lg font-light leading-relaxed">
-            Choose your preferred way to stay. From our elevated cantilever pods and spacious ground-level
-            Bunker to luxury lawn glamping under the open sky.
+            Choose the perfect accommodation setup for your group. From elevated cantilever pods and our
+            spacious ground-level Bunker to complete 9,000 sq.ft private estate exclusivity.
           </p>
 
           {/* Shared Amenities Notice Alert */}
           <div className="mt-6 text-left max-w-2xl mx-auto p-4 rounded-xl bg-forest/5 border border-forest/15 text-xs text-charcoal/80 flex items-start space-x-3 shadow-sm">
             <Info className="w-4 h-4 text-forest mt-0.5 flex-shrink-0" />
             <div>
-              <strong className="text-forest font-semibold">Shared Amenities & Pool Note:</strong> When booked individually, guests in the <strong>Two Pods</strong> and the <strong>Bunker</strong> share the outdoor plunge pool, cricket nets, open kitchen & bar, campfire lounge, and outdoor cinema. For <strong>100% private estate exclusivity</strong> of all facilities, book <strong>Package 3 (Two Pods + Bunker)</strong>.
+              <strong className="text-forest font-semibold">Shared Amenities & Pool Note:</strong> When booked individually, guests in the <strong>Two Pods</strong> and the <strong>Bunker</strong> share the outdoor plunge pool, floodlit cricket nets, open kitchen & bar, campfire lounge, and outdoor cinema. For <strong>100% private estate exclusivity</strong> of all facilities with zero shared amenities, book <strong>Package 3 (Two Pods + Bunker)</strong>.
             </div>
           </div>
         </div>
 
-        {/* Accommodation Visual Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-          {accommodations.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl border border-charcoal/10 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 cursor-pointer"
-              onClick={() => setSelectedUnit(item.id)}
-            >
-              <div>
-                {/* Photo Cover with Tag & Hover Zoom */}
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-forest/90 text-cream backdrop-blur-sm border border-white/10 shadow">
-                    {item.tag}
-                  </span>
-                  <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-md bg-black/50 backdrop-blur-sm text-[11px] text-cream font-medium">
-                    {item.gallery.length} Photos
-                  </div>
-                </div>
+        {/* 3 Official Package Cards Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+          {packages.map((pkg) => {
+            const Icon = pkg.icon;
+            return (
+              <div
+                key={pkg.code}
+                onClick={() => {
+                  setSelectedPackageCode(pkg.code);
+                  setActivePhotoIndex(0);
+                }}
+                className={`rounded-3xl overflow-hidden flex flex-col justify-between transition-all duration-300 border relative group cursor-pointer hover:-translate-y-1 ${
+                  pkg.isPrimary
+                    ? 'bg-forest text-cream shadow-2xl border-gold/40 ring-1 ring-gold/20'
+                    : 'bg-white text-charcoal shadow-xl hover:shadow-2xl border-charcoal/10'
+                }`}
+              >
+                <div>
+                  {/* Photo Cover with Tag, Badge & Gallery Count */}
+                  <div className="relative h-60 sm:h-64 overflow-hidden">
+                    <img
+                      src={pkg.image}
+                      alt={pkg.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
-                {/* Card Content */}
-                <div className="p-6">
-                  <h3 className="font-serif text-2xl font-bold text-forest mb-2 group-hover:text-gold transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-charcoal/70 font-light leading-relaxed mb-6 line-clamp-3">
-                    {item.shortSummary}
-                  </p>
-
-                  {/* Specs Grid */}
-                  <div className="grid grid-cols-2 gap-3 py-3 border-y border-charcoal/10 mb-6 text-xs text-charcoal/80">
-                    <div className="flex items-center space-x-2">
-                      <Users className="w-4 h-4 text-gold flex-shrink-0" />
-                      <span className="font-semibold text-forest">{item.capacity}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Bed className="w-4 h-4 text-gold flex-shrink-0" />
-                      <span className="truncate">{item.beds}</span>
-                    </div>
-                    <div className="flex items-center space-x-2 col-span-2">
-                      <Bath className="w-4 h-4 text-gold flex-shrink-0" />
-                      <span className="truncate">{item.baths}</span>
-                    </div>
-                  </div>
-
-                  {/* Preview Amenities */}
-                  <div className="space-y-2 mb-2">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-forest">
-                      Key Highlights
-                    </div>
-                    <ul className="space-y-1.5">
-                      {item.amenities.slice(0, 3).map((amenity, idx) => (
-                        <li key={idx} className="flex items-center text-xs text-charcoal/70">
-                          <CheckCircle2 className="w-3.5 h-3.5 mr-2 text-forest/70 flex-shrink-0" />
-                          <span className="line-clamp-1">{amenity}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card Footer Button */}
-              <div className="p-6 pt-0">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedUnit(item.id);
-                  }}
-                  className="w-full py-2.5 px-4 rounded-lg bg-beige/60 group-hover:bg-gold group-hover:text-charcoal text-forest text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center space-x-1.5 shadow-sm"
-                >
-                  <span>Click to View Full Details & Photos</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Dedicated Booking Packages Section */}
-        <div id="packages" className="pt-6 border-t border-charcoal/10">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold/15 border border-gold/30 mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold" />
-              <span className="text-[11px] font-bold uppercase tracking-widest text-forest">
-                Official Reservation Packages
-              </span>
-            </div>
-            <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-forest mb-3">
-              Three Dedicated Booking Packages
-            </h3>
-            <p className="text-xs sm:text-sm text-charcoal/70 font-light max-w-xl mx-auto">
-              Select your package below to book directly on Airbnb with instant availability confirmation, or enquire via WhatsApp.
-            </p>
-          </div>
-
-          {/* 3 Packages Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-            {packages.map((pkg) => {
-              const Icon = pkg.icon;
-              return (
-                <div
-                  key={pkg.code}
-                  className={`rounded-2xl p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 border relative ${
-                    pkg.isPrimary
-                      ? 'bg-forest text-cream shadow-2xl border-gold/40 scale-100 md:scale-105 z-10'
-                      : 'bg-white text-charcoal shadow-lg hover:shadow-xl border-charcoal/10'
-                  }`}
-                >
-                  {/* Top Badge */}
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div
-                        className={`p-2.5 rounded-xl ${
-                          pkg.isPrimary ? 'bg-gold/20 text-gold' : 'bg-forest/10 text-forest'
-                        }`}
-                      >
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <span
-                        className={`px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${pkg.badgeColor}`}
-                      >
+                    {/* Top Package Badge & Icon */}
+                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                      <span className={`px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${pkg.badgeColor}`}>
                         {pkg.badge}
                       </span>
+                      <div className={`p-2 rounded-xl backdrop-blur-md ${pkg.isPrimary ? 'bg-gold/20 text-gold' : 'bg-black/40 text-cream'}`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
                     </div>
 
-                    <h4
-                      className={`font-serif text-2xl font-bold mb-1 ${
-                        pkg.isPrimary ? 'text-cream' : 'text-forest'
-                      }`}
-                    >
+                    {/* Bottom Tag & Photo Count */}
+                    <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] text-cream">
+                      <span className="font-semibold uppercase tracking-wider text-gold drop-shadow">
+                        {pkg.tag}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm text-[10px] font-medium">
+                        {pkg.gallery.length} Photos
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-6 sm:p-7">
+                    <h3 className={`font-serif text-2xl font-bold mb-1.5 transition-colors ${pkg.isPrimary ? 'text-cream group-hover:text-gold' : 'text-forest group-hover:text-gold'}`}>
                       {pkg.title}
-                    </h4>
-                    <p
-                      className={`text-xs mb-4 font-light ${
-                        pkg.isPrimary ? 'text-cream/80' : 'text-charcoal/70'
-                      }`}
-                    >
-                      {pkg.tagline}
+                    </h3>
+                    <p className={`text-xs mb-5 font-light leading-relaxed line-clamp-2 ${pkg.isPrimary ? 'text-cream/80' : 'text-charcoal/70'}`}>
+                      {pkg.shortSummary}
                     </p>
 
-                    {/* Capacity Indicator */}
-                    <div
-                      className={`p-3 rounded-xl mb-6 flex items-center justify-between ${
-                        pkg.isPrimary ? 'bg-white/10' : 'bg-beige/40'
-                      }`}
-                    >
+                    {/* Capacity Indicator Pill */}
+                    <div className={`p-3 rounded-xl mb-5 flex items-center justify-between ${pkg.isPrimary ? 'bg-white/10' : 'bg-beige/40'}`}>
                       <div className="flex items-center space-x-2 text-xs">
                         <Users className={`w-4 h-4 ${pkg.isPrimary ? 'text-gold' : 'text-forest'}`} />
-                        <span className="font-medium">Capacity</span>
+                        <span className="font-semibold uppercase tracking-wider text-[11px]">Capacity</span>
                       </div>
-                      <span
-                        className={`text-xs font-bold uppercase tracking-wider ${
-                          pkg.isPrimary ? 'text-gold' : 'text-forest'
-                        }`}
-                      >
+                      <span className={`text-xs font-bold uppercase tracking-wider ${pkg.isPrimary ? 'text-gold' : 'text-forest'}`}>
                         {pkg.capacity}
                       </span>
                     </div>
 
-                    {/* Features List */}
-                    <ul className="space-y-2.5 mb-6 text-xs">
-                      {pkg.features.map((feature, idx) => (
+                    {/* Quick Specs (Beds & Baths) */}
+                    <div className={`grid grid-cols-2 gap-2.5 py-3 border-y mb-5 text-xs ${pkg.isPrimary ? 'border-white/10 text-cream/80' : 'border-charcoal/10 text-charcoal/80'}`}>
+                      <div className="flex items-center space-x-1.5">
+                        <Bed className={`w-3.5 h-3.5 flex-shrink-0 ${pkg.isPrimary ? 'text-gold' : 'text-forest'}`} />
+                        <span className="truncate text-[11px]">{pkg.beds}</span>
+                      </div>
+                      <div className="flex items-center space-x-1.5">
+                        <Bath className={`w-3.5 h-3.5 flex-shrink-0 ${pkg.isPrimary ? 'text-gold' : 'text-forest'}`} />
+                        <span className="truncate text-[11px]">{pkg.baths}</span>
+                      </div>
+                    </div>
+
+                    {/* Features List (Top 3) */}
+                    <ul className="space-y-2 mb-5 text-xs">
+                      {pkg.features.slice(0, 3).map((feature, idx) => (
                         <li key={idx} className="flex items-start">
-                          <CheckCircle2
-                            className={`w-3.5 h-3.5 mr-2 mt-0.5 flex-shrink-0 ${
-                              pkg.isPrimary ? 'text-gold' : 'text-forest'
-                            }`}
-                          />
-                          <span
-                            className={pkg.isPrimary ? 'text-cream/90' : 'text-charcoal/80'}
-                          >
-                            {feature}
-                          </span>
+                          <CheckCircle2 className={`w-3.5 h-3.5 mr-2 mt-0.5 flex-shrink-0 ${pkg.isPrimary ? 'text-gold' : 'text-forest'}`} />
+                          <span className={`line-clamp-1 ${pkg.isPrimary ? 'text-cream/90' : 'text-charcoal/80'}`}>{feature}</span>
                         </li>
                       ))}
                     </ul>
 
-                    {/* Shared vs Exclusive Callout */}
-                    <p
-                      className={`text-[11px] font-light italic p-3 rounded-lg border mb-6 ${
-                        pkg.isPrimary
-                          ? 'bg-gold/10 border-gold/30 text-gold'
-                          : 'bg-charcoal/5 border-charcoal/10 text-charcoal/70'
-                      }`}
-                    >
+                    {/* Shared vs Exclusive Callout Note */}
+                    <div className={`p-3 rounded-xl border text-[11px] italic leading-relaxed mb-2 ${
+                      pkg.isPrimary
+                        ? 'bg-gold/10 border-gold/30 text-gold'
+                        : 'bg-forest/5 border-forest/10 text-charcoal/70'
+                    }`}>
                       {pkg.sharedNote}
-                    </p>
-                  </div>
-
-                  {/* Booking Action Buttons */}
-                  <div className="space-y-2.5 pt-4 border-t border-white/10">
-                    <a
-                      href={pkg.airbnbUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-full py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center space-x-2 shadow ${
-                        pkg.isPrimary
-                          ? 'bg-gold hover:bg-gold-light text-charcoal shadow-gold/20'
-                          : 'bg-forest hover:bg-forest-light text-cream'
-                      }`}
-                    >
-                      <span>Book {pkg.code} on Airbnb</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (onBookClick) onBookClick(pkg.code);
-                      }}
-                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors border flex items-center justify-center space-x-1.5 ${
-                        pkg.isPrimary
-                          ? 'border-white/20 hover:bg-white/10 text-cream'
-                          : 'border-charcoal/20 hover:bg-beige/40 text-charcoal'
-                      }`}
-                    >
-                      <CalendarCheck className="w-3.5 h-3.5 text-gold" />
-                      <span>Enquire on WhatsApp</span>
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Interactive Detail Modal (opens when clicking accommodation card) */}
-      {selectedUnit !== null && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
-          onClick={() => setSelectedUnit(null)}
-        >
-          {(() => {
-            const unit = accommodations.find((a) => a.id === selectedUnit);
-            if (!unit) return null;
-            return (
-              <div
-                className="bg-cream rounded-3xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-charcoal/20 relative p-6 sm:p-10"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedUnit(null)}
-                  className="absolute top-5 right-5 p-2.5 rounded-full bg-charcoal/10 hover:bg-charcoal/20 text-charcoal transition-colors focus:outline-none"
-                  aria-label="Close details"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-
-                <div className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-forest text-cream mb-2">
-                  {unit.tag}
-                </div>
-                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-forest mb-2">
-                  {unit.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-charcoal/80 font-light leading-relaxed mb-6">
-                  {unit.shortSummary}
-                </p>
-
-                {/* Specs Pill Summary */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-white rounded-xl border border-charcoal/10 mb-6 text-xs text-charcoal/80">
-                  <div className="flex items-center space-x-2">
-                    <Users className="w-4 h-4 text-gold flex-shrink-0" />
-                    <div>
-                      <span className="block text-[10px] uppercase text-charcoal/50 font-bold">Capacity</span>
-                      <span className="font-semibold text-forest">{unit.capacity}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Bed className="w-4 h-4 text-gold flex-shrink-0" />
-                    <div>
-                      <span className="block text-[10px] uppercase text-charcoal/50 font-bold">Bed Setup</span>
-                      <span className="font-semibold text-forest">{unit.beds}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Bath className="w-4 h-4 text-gold flex-shrink-0" />
-                    <div>
-                      <span className="block text-[10px] uppercase text-charcoal/50 font-bold">Bathrooms</span>
-                      <span className="font-semibold text-forest">{unit.baths}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Photo Gallery Grid */}
-                <div className="mb-6">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-forest mb-3">
-                    Interior & Surroundings Photographs
-                  </h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {unit.gallery.map((photo, i) => (
-                      <div key={i} className="rounded-xl overflow-hidden h-32 sm:h-40 shadow-sm border border-charcoal/10">
-                        <img
-                          src={photo}
-                          alt={`${unit.title} photograph ${i + 1}`}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Complete Amenities Checklist */}
-                <div className="mb-8">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-forest mb-3">
-                    Included Suite Amenities
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {unit.amenities.map((amenity, i) => (
-                      <div key={i} className="flex items-center text-xs text-charcoal/80">
-                        <CheckCircle2 className="w-3.5 h-3.5 mr-2 text-gold flex-shrink-0" />
-                        <span>{amenity}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Modal Footer Actions */}
-                <div className="pt-4 border-t border-charcoal/10 flex flex-col sm:flex-row gap-3 justify-end items-stretch sm:items-center">
+                {/* Card Action Buttons */}
+                <div className="p-6 sm:p-7 pt-0 space-y-2.5">
                   <a
-                    href={unit.airbnbUrl}
+                    href={pkg.airbnbUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-6 py-3 text-xs font-bold uppercase tracking-widest text-charcoal bg-gold hover:bg-gold-light rounded shadow transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                    className={`w-full py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center space-x-2 shadow ${
+                      pkg.isPrimary
+                        ? 'bg-gold hover:bg-gold-light active:bg-gold-dark text-charcoal shadow-gold/20'
+                        : 'bg-forest hover:bg-forest-light active:bg-forest-dark text-cream'
+                    }`}
                   >
-                    <span>Book on Airbnb ({unit.packageCode})</span>
-                    <ExternalLink className="ml-2 w-3.5 h-3.5" />
+                    <span>Book on Airbnb ({pkg.code})</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
                   </a>
 
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedUnit(null);
-                      if (onBookClick) onBookClick(unit.packageCode);
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPackageCode(pkg.code);
+                      setActivePhotoIndex(0);
                     }}
-                    className="inline-flex items-center justify-center px-6 py-3 text-xs font-bold uppercase tracking-widest text-cream bg-forest hover:bg-forest-light rounded transition-colors"
+                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors border flex items-center justify-center space-x-1.5 ${
+                      pkg.isPrimary
+                        ? 'border-white/20 hover:bg-white/10 text-cream'
+                        : 'border-charcoal/20 hover:bg-beige/40 text-charcoal'
+                    }`}
                   >
-                    <span>Enquire on WhatsApp</span>
+                    <span>View Details & Photos</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
             );
-          })()}
+          })}
+        </div>
+      </div>
+
+      {/* Interactive Detail Modal (opens when clicking card or View Details) */}
+      {activePackage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in"
+          onClick={() => setSelectedPackageCode(null)}
+        >
+          <div
+            className="bg-cream rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-charcoal/20 relative p-6 sm:p-10 text-charcoal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedPackageCode(null)}
+              className="absolute top-5 right-5 p-2.5 rounded-full bg-charcoal/10 hover:bg-charcoal/20 text-charcoal transition-colors focus:outline-none"
+              aria-label="Close details"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Top Badges */}
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${activePackage.badgeColor}`}>
+                {activePackage.badge}
+              </span>
+              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-forest text-cream">
+                {activePackage.tag}
+              </span>
+            </div>
+
+            <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-forest mb-2">
+              {activePackage.title}
+            </h3>
+            <p className="text-xs sm:text-sm text-charcoal/80 font-light leading-relaxed mb-6">
+              {activePackage.fullDescription}
+            </p>
+
+            {/* Specs Summary Pill Bar */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-white rounded-2xl border border-charcoal/10 mb-6 text-xs text-charcoal/80 shadow-sm">
+              <div className="flex items-center space-x-2.5">
+                <Users className="w-4 h-4 text-gold flex-shrink-0" />
+                <div>
+                  <span className="block text-[10px] uppercase text-charcoal/50 font-bold">Max Capacity</span>
+                  <span className="font-bold text-forest">{activePackage.capacity}</span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2.5">
+                <Bed className="w-4 h-4 text-gold flex-shrink-0" />
+                <div>
+                  <span className="block text-[10px] uppercase text-charcoal/50 font-bold">Bed Configuration</span>
+                  <span className="font-semibold text-forest truncate">{activePackage.beds}</span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2.5">
+                <Bath className="w-4 h-4 text-gold flex-shrink-0" />
+                <div>
+                  <span className="block text-[10px] uppercase text-charcoal/50 font-bold">Bathrooms</span>
+                  <span className="font-semibold text-forest truncate">{activePackage.baths}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Shared Amenities Callout */}
+            <div className={`p-4 rounded-xl border text-xs leading-relaxed mb-6 flex items-start space-x-2.5 ${
+              activePackage.isPrimary
+                ? 'bg-gold/15 border-gold/40 text-charcoal'
+                : 'bg-forest/5 border-forest/15 text-charcoal/80'
+            }`}>
+              <Info className="w-4 h-4 text-forest mt-0.5 flex-shrink-0" />
+              <div>
+                <strong className="text-forest font-semibold">Amenities Inclusion:</strong> {activePackage.sharedNote}
+              </div>
+            </div>
+
+            {/* Interactive Photo Gallery Viewer */}
+            <div className="mb-6">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-forest mb-3 flex items-center justify-between">
+                <span>Property Photographs ({activePackage.gallery.length})</span>
+                <span className="text-[11px] font-normal text-charcoal/60">Click thumbnail to switch preview</span>
+              </h4>
+
+              {/* Main Active Photo Preview */}
+              <div className="relative rounded-2xl overflow-hidden h-64 sm:h-80 shadow-md border border-charcoal/10 mb-3 bg-black">
+                <img
+                  src={activePackage.gallery[activePhotoIndex] || activePackage.image}
+                  alt={`${activePackage.title} photo preview`}
+                  className="w-full h-full object-cover transition-all duration-300"
+                />
+                <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-sm text-[11px] text-cream">
+                  {activePhotoIndex + 1} of {activePackage.gallery.length}
+                </div>
+                {activePackage.gallery.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setActivePhotoIndex((prev) => (prev - 1 + activePackage.gallery.length) % activePackage.gallery.length)}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 hover:bg-black/75 text-cream transition-colors"
+                      aria-label="Previous photo"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActivePhotoIndex((prev) => (prev + 1) % activePackage.gallery.length)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 hover:bg-black/75 text-cream transition-colors"
+                      aria-label="Next photo"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Thumbnail Strip */}
+              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                {activePackage.gallery.map((photo, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setActivePhotoIndex(i)}
+                    className={`rounded-lg overflow-hidden h-14 border-2 transition-all ${
+                      activePhotoIndex === i ? 'border-gold shadow-md scale-105' : 'border-transparent opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    <img
+                      src={photo}
+                      alt={`Thumbnail ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Complete Included Amenities Checklist */}
+            <div className="mb-8">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-forest mb-3">
+                Complete Package Amenities & Inclusions
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {activePackage.amenities.map((amenity, i) => (
+                  <div key={i} className="flex items-center text-xs text-charcoal/80">
+                    <CheckCircle2 className="w-3.5 h-3.5 mr-2 text-gold flex-shrink-0" />
+                    <span>{amenity}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Modal Footer Actions */}
+            <div className="pt-4 border-t border-charcoal/10 flex flex-col sm:flex-row gap-3 justify-end items-stretch sm:items-center">
+              <button
+                type="button"
+                onClick={() => setSelectedPackageCode(null)}
+                className="inline-flex items-center justify-center px-6 py-3 text-xs font-semibold uppercase tracking-widest text-charcoal/70 hover:text-charcoal transition-colors"
+              >
+                Close Details
+              </button>
+
+              <a
+                href={activePackage.airbnbUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-6 py-3 text-xs font-bold uppercase tracking-widest text-charcoal bg-gold hover:bg-gold-light rounded-xl shadow-md transition-all duration-200"
+              >
+                <span>Book {activePackage.code} on Airbnb</span>
+                <ExternalLink className="ml-2 w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
         </div>
       )}
     </section>

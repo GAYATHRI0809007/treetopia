@@ -5,7 +5,7 @@ interface NavbarProps {
   onOpenBooking?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
+export const Navbar: React.FC<NavbarProps> = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -25,10 +25,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
-    { name: 'Stay', href: '#stay' },
-    { name: 'Packages', href: '#packages' },
-    { name: 'Experiences', href: '#experiences' },
+    { name: 'Properties', href: '#properties' },
+    { name: 'Activities', href: '#activities' },
     { name: 'Gallery', href: '#gallery' },
+    { name: 'Reviews', href: '#reviews' },
     { name: 'Location', href: '#location' },
     { name: 'Contact', href: '#contact' },
   ];
@@ -71,13 +71,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
           {/* Action CTAs */}
           <div className="hidden sm:flex items-center space-x-4">
-            <button
-              onClick={onOpenBooking}
+            <a
+              href="#properties"
               className="inline-flex items-center justify-center px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-charcoal bg-gold hover:bg-gold-light active:bg-gold-dark transition-all duration-300 rounded shadow-md hover:shadow-gold/20 transform hover:-translate-y-0.5"
             >
               <span>Book Your Stay</span>
               <ArrowUpRight className="ml-1.5 w-3.5 h-3.5" />
-            </button>
+            </a>
           </div>
 
           {/* Mobile Hamburger Toggle Button */}
@@ -113,15 +113,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             </a>
           ))}
           <div className="pt-2">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (onOpenBooking) onOpenBooking();
-              }}
-              className="w-full text-center px-5 py-3 text-xs font-semibold uppercase tracking-widest text-charcoal bg-gold hover:bg-gold-light active:bg-gold-dark transition-all duration-300 rounded shadow-md"
+            <a
+              href="#properties"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block w-full text-center px-5 py-3 text-xs font-semibold uppercase tracking-widest text-charcoal bg-gold hover:bg-gold-light active:bg-gold-dark transition-all duration-300 rounded shadow-md"
             >
               Book Your Stay
-            </button>
+            </a>
           </div>
         </div>
       </div>

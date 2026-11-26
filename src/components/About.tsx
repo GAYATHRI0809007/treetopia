@@ -121,11 +121,11 @@ export const About: React.FC<AboutProps> = ({ onLearnMore }) => {
             {/* Action CTA */}
             <div>
               <a
-                href="#stay"
+                href="#properties"
                 onClick={onLearnMore}
                 className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-forest hover:text-gold transition-colors duration-300 group focus:outline-none"
               >
-                <span>Discover Accommodation Options</span>
+                <span>Discover Properties & Packages</span>
                 <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform duration-300 text-gold" />
               </a>
             </div>

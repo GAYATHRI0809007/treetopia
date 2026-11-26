@@ -107,13 +107,14 @@ export const Occasions: React.FC<OccasionsProps> = ({ onPlanStay }) => {
 
                 {/* Card Action */}
                 <div className="px-6 pb-6 pt-2">
-                  <button
+                  <a
+                    href="#properties"
                     onClick={onPlanStay}
                     className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-forest group-hover:text-gold transition-colors"
                   >
                     <span>Plan Your Stay</span>
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  </a>
                 </div>
               </div>
             );

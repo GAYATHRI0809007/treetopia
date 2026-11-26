@@ -56,7 +56,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onBookClick }) => {
           </a>
 
           <a
-            href="#stay"
+            href="#properties"
             onClick={onBookClick}
             className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-xs font-bold tracking-widest uppercase text-cream bg-white/10 hover:bg-white/20 active:bg-white/30 backdrop-blur-md border border-white/30 hover:border-gold transition-all duration-300 rounded shadow-md transform hover:-translate-y-0.5"
           >

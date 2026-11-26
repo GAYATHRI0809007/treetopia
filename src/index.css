@@ -33,3 +33,244 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #173D32;
 }
+
+/* Hide scrollbar utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPLASH — Luxury Resort Intro
+   Inspired by Aman / Six Senses / Taj hotel intros.
+   Clean, nature-grounded, photography-led.
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Root ── */
+.splash-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── 1. Solid forest-dark base ── */
+.splash-base {
+  position: absolute;
+  inset: 0;
+  background: #0e1a14;
+}
+
+/* ── 2. Property photograph ── */
+.splash-photo {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.12);
+  transition: opacity 2.4s ease-out, transform 6s ease-out;
+}
+.splash-photo--on {
+  opacity: 1;
+  transform: scale(1);
+}
+.splash-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+}
+.splash-photo-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, transparent 10%, rgba(14,26,20,0.65) 70%),
+    linear-gradient(0deg, rgba(14,26,20,0.85) 0%, transparent 40%),
+    linear-gradient(180deg, rgba(14,26,20,0.6) 0%, transparent 30%);
+}
+
+/* ── 3. Drifting mist / fog ── */
+.splash-mist {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.splash-mist-layer {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  opacity: 0.18;
+}
+.splash-mist-1 {
+  top: 20%;
+  left: -30%;
+  height: 40%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(248,247,243,0.25) 20%,
+    rgba(248,247,243,0.4) 50%,
+    rgba(248,247,243,0.25) 80%,
+    transparent 100%
+  );
+  animation: mist-drift 12s ease-in-out infinite alternate;
+}
+.splash-mist-2 {
+  bottom: 10%;
+  left: -50%;
+  height: 35%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168,181,160,0.2) 30%,
+    rgba(168,181,160,0.35) 50%,
+    rgba(168,181,160,0.2) 70%,
+    transparent 100%
+  );
+  filter: blur(10px);
+  animation: mist-drift 15s ease-in-out 2s infinite alternate-reverse;
+}
+
+@keyframes mist-drift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(30%); }
+}
+
+/* ── 4. Centered content block ── */
+.splash-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+/* Small top pill badge */
+.splash-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(197,163,106,0.3);
+  background: rgba(14,26,20,0.5);
+  backdrop-filter: blur(8px);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #C5A36A;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.splash-pill--on {
+  opacity: 1;
+  transform: translateY(0);
+}
+.splash-pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #C5A36A;
+  animation: pill-glow 2.5s ease-in-out infinite;
+}
+@keyframes pill-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(197,163,106,0.4); }
+  50%      { box-shadow: 0 0 10px rgba(197,163,106,0.8); }
+}
+
+/* Brand name — large serif */
+.splash-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+  color: #F8F7F3;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(6px);
+  transition: opacity 1.4s cubic-bezier(0.22,1,0.36,1),
+              transform 1.4s cubic-bezier(0.22,1,0.36,1),
+              filter 1.4s cubic-bezier(0.22,1,0.36,1);
+}
+.splash-title--on {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Gold divider */
+.splash-gold-line {
+  width: 0;
+  height: 1px;
+  margin: 1.1rem 0;
+  background: linear-gradient(90deg, transparent, #C5A36A, transparent);
+  transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
+}
+.splash-gold-line--on {
+  width: min(280px, 55vw);
+}
+
+/* Tagline */
+.splash-tagline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(0.85rem, 2.5vw, 1.3rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: #C5A36A;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1s ease 0.15s, transform 1s ease 0.15s;
+}
+.splash-tagline--on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Location */
+.splash-loc {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.55rem, 1.2vw, 0.7rem);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 400;
+  color: rgba(248,247,243,0.45);
+  margin-top: 0.9rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+}
+.splash-loc--on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 5. Exit: gentle scale + fade dissolve ── */
+.splash--exit {
+  animation: splash-dissolve 1.4s cubic-bezier(0.45,0,0.15,1) forwards;
+}
+
+@keyframes splash-dissolve {
+  0%   { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.06); filter: blur(4px); pointer-events: none; }
+}

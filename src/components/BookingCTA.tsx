@@ -1,12 +1,13 @@
 import React from 'react';
 import { propertyImages } from '../data/propertyImages';
-import { MessageSquare, ExternalLink, CalendarCheck, ShieldCheck } from 'lucide-react';
+import { siteConfig } from '../data/siteConfig';
+import { ExternalLink, CalendarCheck, ShieldCheck } from 'lucide-react';
 
 interface BookingCTAProps {
   onOpenEnquiry?: () => void;
 }
 
-export const BookingCTA: React.FC<BookingCTAProps> = ({ onOpenEnquiry }) => {
+export const BookingCTA: React.FC<BookingCTAProps> = () => {
   return (
     <section className="relative min-h-[520px] sm:min-h-[600px] w-full flex items-center justify-center overflow-hidden">
       {/* Background Night Photo */}
@@ -46,22 +47,24 @@ export const BookingCTA: React.FC<BookingCTAProps> = ({ onOpenEnquiry }) => {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8">
-          {/* WhatsApp Direct Enquiry */}
-          <button
-            onClick={onOpenEnquiry}
+          {/* Airbnb Direct Booking */}
+          <a
+            href={siteConfig.airbnb.url}
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-charcoal bg-gold hover:bg-gold-light active:bg-gold-dark transition-all duration-300 rounded shadow-xl hover:shadow-gold/30 transform hover:-translate-y-0.5"
           >
-            <MessageSquare className="w-4 h-4 mr-2 text-charcoal" />
-            <span>Enquire on WhatsApp</span>
-          </button>
+            <CalendarCheck className="w-4 h-4 mr-2 text-charcoal" />
+            <span>Book on Airbnb</span>
+            <ExternalLink className="w-3.5 h-3.5 ml-1.5 text-charcoal/80" />
+          </a>
 
-          {/* Airbnb Packages Anchor */}
+          {/* Properties Anchor */}
           <a
-            href="#packages"
+            href="#properties"
             className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-cream bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 hover:border-gold transition-all duration-300 rounded shadow-md transform hover:-translate-y-0.5 group"
           >
-            <CalendarCheck className="w-4 h-4 mr-2 text-gold" />
-            <span>View 3 Airbnb Packages</span>
+            <span>Explore Properties & Packages</span>
             <ExternalLink className="w-3.5 h-3.5 ml-1.5 text-cream/70 group-hover:text-gold transition-colors" />
           </a>
         </div>

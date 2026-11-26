@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -10,20 +10,16 @@ import { Occasions } from './components/Occasions';
 import { Reviews } from './components/Reviews';
 import { Location } from './components/Location';
 import { BookingCTA } from './components/BookingCTA';
-import { BookingModal } from './components/BookingModal';
+import { SplashScreen } from './components/SplashScreen';
 import { siteConfig } from './data/siteConfig';
-import { ExternalLink, MapPin, Instagram, MessageSquare, Phone } from 'lucide-react';
+import { ExternalLink, MapPin, Instagram, Phone } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<string>('P3');
+  const [showSplash, setShowSplash] = useState(true);
 
-  const handleOpenBooking = (packageCode?: string) => {
-    if (packageCode) {
-      setSelectedPackage(packageCode);
-    }
-    setIsBookingModalOpen(true);
-  };
+  const handleSplashFinish = useCallback(() => {
+    setShowSplash(false);
+  }, []);
 
   const handleExploreClick = () => {
     const el = document.getElementById('about');
@@ -32,17 +28,19 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-cream text-charcoal flex flex-col font-sans selection:bg-gold selection:text-white">
+      {/* Intro Splash Animation */}
+      {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       {/* 5. Responsive Luxury Navigation Bar */}
-      <Navbar onOpenBooking={() => handleOpenBooking('P3')} />
+      <Navbar />
 
       <main className="flex-grow">
         {/* 6A. Cinematic Hero Section */}
-        <Hero onExploreClick={handleExploreClick} onBookClick={() => handleOpenBooking('P3')} />
+        <Hero onExploreClick={handleExploreClick} />
 
         {/* 6B. Brand Introduction Section */}
         <About
           onLearnMore={() => {
-            const el = document.getElementById('stay');
+            const el = document.getElementById('properties');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
         />
@@ -51,16 +49,16 @@ export const App: React.FC = () => {
         <Highlights />
 
         {/* 6D. Accommodation Suites, Bunker, Tent & Packages */}
-        <Accommodation onBookClick={handleOpenBooking} />
+        <Accommodation />
 
-        {/* 6E. Experiences & Activities */}
-        <Experiences onBookClick={() => handleOpenBooking('P3')} />
+        {/* 6E. Activities & Recreation */}
+        <Experiences />
 
         {/* 6F. Interactive Photo Gallery & Full-Screen Lightbox */}
         <Gallery />
 
         {/* 6G. Guest Occasions & Celebrations */}
-        <Occasions onPlanStay={() => handleOpenBooking('P3')} />
+        <Occasions />
 
         {/* 6H. Verified Guest Reviews & Airbnb Rating */}
         <Reviews />
@@ -69,7 +67,7 @@ export const App: React.FC = () => {
         <Location />
 
         {/* 6J. Final Booking Call to Action */}
-        <BookingCTA onOpenEnquiry={() => handleOpenBooking('P3')} />
+        <BookingCTA />
       </main>
 
       {/* 6K. Brand Footer */}
@@ -123,10 +121,10 @@ export const App: React.FC = () => {
               <ul className="space-y-2.5 text-xs text-cream/80">
                 <li><a href="#home" className="hover:text-gold transition-colors">Home</a></li>
                 <li><a href="#about" className="hover:text-gold transition-colors">About Our Retreat</a></li>
-                <li><a href="#stay" className="hover:text-gold transition-colors">Accommodations</a></li>
-                <li><a href="#packages" className="hover:text-gold transition-colors">Booking Packages</a></li>
-                <li><a href="#experiences" className="hover:text-gold transition-colors">Experiences & Cricket</a></li>
+                <li><a href="#properties" className="hover:text-gold transition-colors">Properties & Packages</a></li>
+                <li><a href="#activities" className="hover:text-gold transition-colors">Activities & Recreation</a></li>
                 <li><a href="#gallery" className="hover:text-gold transition-colors">Photo Gallery</a></li>
+                <li><a href="#reviews" className="hover:text-gold transition-colors">Guest Reviews</a></li>
                 <li><a href="#location" className="hover:text-gold transition-colors">Location & Route</a></li>
               </ul>
             </div>
@@ -182,13 +180,15 @@ export const App: React.FC = () => {
                   </a>
                 </li>
                 <li className="pt-2">
-                  <button
-                    onClick={() => handleOpenBooking('P3')}
+                  <a
+                    href={siteConfig.airbnb.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gold hover:bg-gold-light text-charcoal text-xs font-bold uppercase tracking-wider rounded transition-colors shadow"
                   >
-                    <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
-                    <span>WhatsApp Enquiry</span>
-                  </button>
+                    <span>Ask Host on Airbnb</span>
+                    <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+                  </a>
                 </li>
               </ul>
             </div>
@@ -209,24 +209,6 @@ export const App: React.FC = () => {
           </div>
         </div>
       </footer>
-
-      {/* Floating Sticky Mobile WhatsApp/Book CTA */}
-      <div className="fixed bottom-5 right-5 z-40 sm:hidden">
-        <button
-          onClick={() => handleOpenBooking('P3')}
-          className="p-3.5 rounded-full bg-gold text-charcoal shadow-2xl hover:bg-gold-light active:scale-95 transition-all flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white"
-          aria-label="Enquire on WhatsApp"
-        >
-          <MessageSquare className="w-6 h-6 text-charcoal" />
-        </button>
-      </div>
-
-      {/* Section 7: Interactive Booking Enquiry & WhatsApp Modal */}
-      <BookingModal
-        isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-        initialPackageCode={selectedPackage}
-      />
     </div>
   );
 };
